@@ -4,7 +4,7 @@ from machine import Machine
 
 class MachineTestCase(unittest.TestCase):
     """
-    Tests pour la méga machine à caoua
+    Test for MMC, to test use in cmd : python3 -m unittest test_XXXXX.py
     """
 
     def test_init_in_maintenance(self):
