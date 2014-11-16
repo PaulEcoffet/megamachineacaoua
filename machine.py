@@ -4,7 +4,8 @@ class WrongModeException(Exception): pass
 
 class Machine(object):
     """
-    Machine's docs string, need to be filled
+    Coffee machine out from factory. Can do anything. Should be put in
+    maintenance or usage mode
     """
 
     CoinsType = [200, 100, 50, 20, 10]
