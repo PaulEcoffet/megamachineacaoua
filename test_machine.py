@@ -4,33 +4,44 @@ from machine import Machine
 
 class MachineTestCase(unittest.TestCase):
     """
-    Test for MMC, to test use in cmd : python3 -m unittest test_XXXXX.py
+    Test for MMC, to test use in cmd: python.exe -m unittest test_XXXXX.py
+                             in bash: python3 -m unittest test_XXXXX.py
     """
-
-    def test_init_in_maintenance(self):
-        mc = Machine()
-        self.assertTrue(mc.maintenance)
 
     def test_init_default_maxstock(self):
         mc = Machine()
-        for name, max_stock in mc.max_stock.items():
-            self.assertEqual(max_stock, 100)
+        for key in Machine.StocksType:
+            self.assertEqual(mc.max_stocks[key], 100)
 
     def test_init_default_maxcoins(self):
         mc = Machine()
-        for value, max_coins in mc.max_coins.items():
-            self.assertEqual(max_coins, 100)
+        for key in Machine.CoinsType:
+            self.assertEqual(mc.max_coins[key], 100)
 
     def test_init_empty_stocks(self):
         mc = Machine()
-        for name, stock in mc.stock.items():
-            self.assertEqual(stock, 0)
+        for key in Machine.StocksType:
+            self.assertEqual(mc.stocks[key], 0)
 
     def test_init_empty_coins(self):
         mc = Machine()
-        for value, stock in mc.coins.items():
-            self.assertEqual(stock, 0)
+        for key in Machine.CoinsType:
+            self.assertEqual(mc.coins[key], 0)
 
     def test_init_empty_log(self):
         mc = Machine()
         self.assertEqual(mc.log, [])  # TODO log d'initialisation?
+
+    def test_edit_stocks(self):
+        mc = Machine()
+        stock = mc.stocks
+        mc.edit_stocks(coffee=50)
+        stock['coffee'] = 50
+        self.assertEqual(mc.stocks, stock)
+        mc.edit_stocks(coffee=49)
+        self.assertEqual(mc.stocks, stock)
+        mc.edit_stocks(coffee=mc.max_stocks['coffee']+1)
+        self.assertEqual(mc.stocks, stock)
+        mc.edit_stocks(coffee=mc.max_stocks['coffee'])
+        stock['coffee'] = mc.max_stocks['coffee']
+        self.assertEqual(mc.stocks, stock)
