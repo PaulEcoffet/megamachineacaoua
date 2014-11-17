@@ -10,8 +10,9 @@ class Machine(object):
 
     CoinsType = [200, 100, 50, 20, 10]
     StocksType = ['coffee', 'tea', 'chocolate', 'milk', 'sugar']
-    DefaultPrices = {'coffee': 20, 'tea': 10, 'chocolate':30,
-                     'milk': 5, 'sugar': [0, 5, 15, 15]}
+    DefaultPrices = {'coffee': 20, 'tea': 10, 'chocolate': 30,
+                     'milk': 5, 'sugar': [0, 5, 15, 15]}  # On peut aussi faire
+                                                          # coffee: [0, 20]
 
     def __init__(self, max_stocks=None, max_coins=None, stock_price=None):
         if not max_stocks:
@@ -93,3 +94,20 @@ class Machine(object):
 
     def __repr__(self):
         return 'Machine à café d\'usine'
+
+
+
+class MachineFunc(object):
+
+    def __init__(self, machine_factory):
+        self.m = machine_factory
+
+    def edit_stock(self, *args, **kwargs):
+        raise NotImplemented()
+
+    def order(self, *args, **kwargs):
+        return self.m.order(*args, **kwargs)
+
+    @property
+    def fact(self):
+        return self.m
