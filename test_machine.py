@@ -45,3 +45,17 @@ class MachineTestCase(unittest.TestCase):
         mc.edit_stocks(coffee=mc.max_stocks['coffee'])
         stock['coffee'] = mc.max_stocks['coffee']
         self.assertEqual(mc.stocks, stock)
+
+    def test_parse_order(self):
+        mc = Machine()
+        drink = {'milk': 1, 'sugar': 3, 'coffee': 1, 'tea': 0, 'chocolate':0}
+        self.assertEqual(mc.parse_order((1,1,1,0,1,0)), drink)
+
+        drink = {'milk': 0, 'sugar': 0, 'coffee': 0, 'tea': 0, 'chocolate':0}
+        self.assertEqual(mc.parse_order((0,0,0,0,0,0)), drink)
+
+        drink = {'milk': 0, 'sugar': 0, 'tea': 1, 'coffee': 0, 'chocolate':0}
+        self.assertEqual(mc.parse_order((0,0,0,1,1,1)), drink)
+
+        drink = {'milk': 0, 'sugar': 0, 'tea': 0, 'coffee': 1, 'chocolate':1}
+        self.assertEqual(mc.parse_order((0,0,0,0,1,1)), drink)

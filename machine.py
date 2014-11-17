@@ -1,6 +1,6 @@
 import copy
 
-class WrongModeException(Exception): pass
+class InvalidOrderException(Exception): pass
 
 class Machine(object):
     """
@@ -50,6 +50,27 @@ class Machine(object):
                 if self.stocks[type_] < new_val <= self.max_stocks[type_]:
                     self.stocks[type_] = new_val
 
+    def parse_order(self, command):
+        drink = {}
+        drink['sugar'] = command[0] * 2 + command[1]
+        drink['milk'] = command[2]
+        if command[3]:
+            drink['tea'] = 1
+            drink['coffee'] = 0
+            drink['chocolate'] = 0
+        else:
+            drink['tea'] = 0
+            drink['coffee'] = command[4]
+            drink['chocolate'] = command[5]
+        return drink
+
+    def order(self, command):
+        drink = self.parse_order(command)
+        if not drink['beverage']:
+            raise InvalidOrderException('You need to choose a beverage')
+        for key in self.stocks:
+            pass # Test if enough stock or raise error
+
     @property
     def max_stocks(self):
         return self._max_stocks
@@ -72,33 +93,3 @@ class Machine(object):
 
     def __repr__(self):
         return 'Machine à café d\'usine'
-
-
-###########################
-# TODO Are those useful ? #
-###########################
-class Order(object):
-    """
-    Order's docs string, need to be filled
-    """
-
-    def __init__(self, base,supp_choco=False,supp_milk=False,supp_sugar=0): #need setter, getter
-        self.drink = Drink(base, supp_choco, supp_milk, supp_sugar)
-        self._aMoney = []
-
-
-
-class Drink(object):
-    """
-    Drink's docs string, need to be filled
-    """
-
-    def __init__(self, base,supp_choco=False,supp_milk=False,supp_sugar=0):
-        self.base = base
-        self.supp_choco = supp_choco
-        self.supp_milk = supp_milk
-        self.supp_sugar = supp_sugar
-        self.price = cal_price()
-
-    def cal_price(self):
-        pass
