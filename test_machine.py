@@ -1,6 +1,6 @@
 import unittest
 from machine import Machine
-
+import copy
 
 class MachineTestCase(unittest.TestCase):
     """
@@ -34,7 +34,7 @@ class MachineTestCase(unittest.TestCase):
 
     def test_edit_stocks(self):
         mc = Machine()
-        stock = mc.stocks
+        stock = copy.deepcopy(mc.stocks)
         mc.edit_stocks(coffee=50)
         stock['coffee'] = 50
         self.assertEqual(mc.stocks, stock)
@@ -64,22 +64,16 @@ class MachineTestCase(unittest.TestCase):
     def test_edit_prices(self):
         mc = Machine()
 
-        prices = mc.prices
+        prices = copy.deepcopy(mc.prices)
         prices['coffee'] = 30
         mc.edit_price(coffee=30)
-        self.assertEqual(mc.prices['coffee'],prices['coffee'])
+        self.assertEqual(mc.prices,prices)
         
         mc.edit_price(coffe=-10)
-        self.assertEqual(mc.prices['coffee'],prices['coffee'])
+        self.assertEqual(mc.prices,prices)
 
         prices['coffee'] = 40
         prices['tea'] = 20
 
         mc.edit_price(coffee=40,tea=20)
-        self.assertEqual(mc.prices['coffee'],prices['coffee'])
-        self.assertEqual(mc.prices['tea'],prices['tea'])
-
-
-
-
-                                 
+        self.assertEqual(mc.prices,prices)
