@@ -42,6 +42,7 @@ class Machine(object):
         m.edit_stocks(**new_stocks)
         ```
         """
+        prev_stocks = self.stocks
         for type_ in Machine.StocksType:
             try:
                 new_val = stocks[type_]
@@ -50,6 +51,7 @@ class Machine(object):
             else:
                 if self.stocks[type_] < new_val <= self.max_stocks[type_]:
                     self.stocks[type_] = new_val
+        self._log.append(StockLog(prev_stocks, self.stocks))
 
     def parse_order(self, command):
         drink = {}
