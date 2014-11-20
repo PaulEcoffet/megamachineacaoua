@@ -25,6 +25,10 @@ class Machine(object):
         self._cash = {key: 0 for key in Machine.CoinsType}
         self._coins = {key: 0 for key in Machine.CoinsType}
         self._log = []
+        self._prices = DefaultPrices
+
+    def edit_prices(self, **prices):
+        pass
 
     def edit_stocks(self, **stocks):
         """
@@ -38,7 +42,7 @@ class Machine(object):
         m.edit_stocks(coffee=80, tea=50, chocolate=42)
         ```
         ```
-        new_stocks = {'coffee': 80, 'tea': 42}
+        new_stocks = {'coffee': 80, 'tea': 50, 'chocolate' = 42}
         m.edit_stocks(**new_stocks)
         ```
         """
@@ -72,8 +76,8 @@ class Machine(object):
         if not drink['beverage']:
             raise InvalidOrderException('You need to choose a beverage')
         for key in self.stocks:
-            pass # Test if enough stock or raise error
-
+            pass # Test if enough stock or raise error            
+        
     @property
     def max_stocks(self):
         return self._max_stocks
@@ -93,6 +97,10 @@ class Machine(object):
     @property
     def log(self):
         return self._log
+
+    @property
+    def prices(self):
+        return self._prices
 
     def __repr__(self):
         return 'Machine à café d\'usine'

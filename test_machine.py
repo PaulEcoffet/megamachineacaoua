@@ -59,3 +59,26 @@ class MachineTestCase(unittest.TestCase):
 
         drink = {'milk': 0, 'sugar': 0, 'tea': 0, 'coffee': 1, 'chocolate':1}
         self.assertEqual(mc.parse_order((0,0,0,0,1,1)), drink)
+
+    def test_edit_prices(self):
+        mc = Machine()
+
+        prices = mc.prices
+        prices['coffee'] = 30
+        mc.edit_price(coffee=30)
+        self.assertEqual(mc.prices['coffee'],prices['coffee'])
+        
+        mc.edit_price(coffe=-10)
+        self.assertEqual(mc.prices['coffee'],prices['coffee'])
+
+        prices['coffee'] = 40
+        prices['tea'] = 20
+
+        mc.edit_price(coffee=40,tea=20)
+        self.assertEqual(mc.prices['coffee'],prices['coffee'])
+        self.assertEqual(mc.prices['tea'],prices['tea'])
+
+
+
+
+                                 
