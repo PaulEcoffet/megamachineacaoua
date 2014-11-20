@@ -42,7 +42,7 @@ class Machine(object):
         m.edit_stocks(coffee=80, tea=50, chocolate=42)
         ```
         ```
-        new_stocks = {'coffee': 80, 'tea': 50, 'chocolate' = 42}
+        new_stocks = {'coffee': 80, 'tea': 50, 'chocolate' : 42}
         m.edit_stocks(**new_stocks)
         ```
         """
