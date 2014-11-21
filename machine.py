@@ -1,4 +1,5 @@
 import copy
+from logs import StockLog
 
 class InvalidOrderException(Exception): pass
 
@@ -25,7 +26,7 @@ class Machine(object):
         self._cash = {key: 0 for key in Machine.CoinsType}
         self._coins = {key: 0 for key in Machine.CoinsType}
         self._log = []
-        self._prices = DefaultPrices
+        self._prices = Machine.DefaultPrices
 
     def edit_prices(self, **prices):
         pass
