@@ -74,7 +74,7 @@ class Machine(object):
         drink = Drink(command, self.stock_price)
         coins = Coins(coins_in, Machine.CoinsType)
         coins_out = self.give_change(coins, Machine.MaxCashInput)
-        coins -= coins_out
+        coins.subtract(coins_out)
         if coins.value == 0:
             return None, coins_out  # Give all the cash
         if not drink.has_beverage:
@@ -85,9 +85,8 @@ class Machine(object):
                         'Not enough {} in stock'.format(item))
         if coins.value < drink.price:
             raise InvalidOrderException('Not Enough change to pay the order')
-
-        coins_out += self.give_change(coins, drink.price)
-        self.add_to_cash(coins - coins_out)
+        coins_out.add(self.give_change(coins, drink.price))
+        self.add_to_cash(coins.subtract(coins_out))
         self.remove_stock(drink.stocks)
         return drink, coins_out
 
