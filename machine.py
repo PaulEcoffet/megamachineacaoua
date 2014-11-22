@@ -1,5 +1,8 @@
 import copy
 from logs import StockLog
+from drink import Drink
+from coins import Coins
+
 
 class InvalidOrderException(Exception): pass
 
@@ -9,26 +12,26 @@ class Machine(object):
     maintenance or usage mode
     """
 
+    MaxCashInput = 200
     CoinsType = [200, 100, 50, 20, 10]
     StocksType = ['coffee', 'tea', 'chocolate', 'milk', 'sugar']
     DefaultPrices = {'coffee': 20, 'tea': 10, 'chocolate': 30,
                      'milk': 5, 'sugar': [0, 5, 15, 15]}  # On peut aussi faire
                                                           # coffee: [0, 20]
 
-    def __init__(self, max_stocks=None, max_coins=None, stock_price=None):
+    def __init__(self, max_stocks=None, max_coins=None, stock_prices=None):
         if not max_stocks:
             self._max_stocks = {key: 100 for key in Machine.StocksType}
         if not max_coins:
             self._max_coins = {key: 100 for key in Machine.CoinsType}
-        if not stock_price:
-            self._stock_price = copy.copy(Machine.DefaultPrices)
+        if not stock_prices:
+            self._stock_prices = copy.copy(Machine.DefaultPrices)
         self._stocks = {key: 0 for key in Machine.StocksType}
-        self._cash = {key: 0 for key in Machine.CoinsType}
-        self._coins = {key: 0 for key in Machine.CoinsType}
+        self._cash = Coins((0 for key in Machine.CoinsType, Machine.CoinsType))
+        self._coins = Coins((0 for key in Machine.CoinsType, Machine.CoinsType))
         self._log = []
-        self._prices = Machine.DefaultPrices
 
-    def edit_prices(self, **prices):
+    def edit_prices(self, **prices):  # TODO SUGAR NOT WORKING WITH THIS CODE
 
         for type_ in Machine.StocksType:
             try:
@@ -37,10 +40,7 @@ class Machine(object):
                 pass
             else:
                 if new_val > 0:
-                    self.prices[type_] = new_val
-                
-            
-            
+                    self.stock_prices[type_] = new_val
 
     def edit_stocks(self, **stocks):
         """
@@ -69,27 +69,28 @@ class Machine(object):
                     self.stocks[type_] = new_val
         self._log.append(StockLog(prev_stocks, self.stocks))
 
-    def parse_order(self, command):
-        drink = {}
-        drink['sugar'] = command[0] * 2 + command[1]
-        drink['milk'] = command[2]
-        if command[3]:
-            drink['tea'] = 1
-            drink['coffee'] = 0
-            drink['chocolate'] = 0
-        else:
-            drink['tea'] = 0
-            drink['coffee'] = command[4]
-            drink['chocolate'] = command[5]
-        return drink
 
-    def order(self, command):
-        drink = self.parse_order(command)
-        if not drink['beverage']:
+    def order(self, command, coins_in):
+        drink = Drink(command, self.stock_price)
+        coins = Coins(coins_in, Machine.CoinsType)
+        coins_out = self.give_change(coins, Machine.MaxCashInput)
+        coins -= coins_out
+        if coins.value == 0:
+            return None, coins_out  # Give all the cash
+        if not drink.has_beverage:
             raise InvalidOrderException('You need to choose a beverage')
-        for key in self.stocks:
-            pass # Test if enough stock or raise error            
-        
+        for item in drink.stocks:
+            if self.stocks[item] - drink.stocks[item] < 0:
+                raise NotEnoughStockException(
+                        'Not enough {} in stock'.format(item))
+        if coins.value < drink.price:
+            raise InvalidOrderException('Not Enough change to pay the order')
+
+        coins_out += self.give_change(coins, drink.price)
+        self.add_to_cash(coins - coins_out)
+        self.remove_stock(drink.stocks)
+        return drink, coins_out
+
     @property
     def max_stocks(self):
         return self._max_stocks
@@ -111,8 +112,8 @@ class Machine(object):
         return self._log
 
     @property
-    def prices(self):
-        return self._prices
+    def stock_prices(self):
+        return self._stock_prices
 
     def __repr__(self):
         return 'Machine à café d\'usine'
