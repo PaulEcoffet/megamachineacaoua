@@ -60,20 +60,20 @@ class MachineTestCase(unittest.TestCase):
         drink = {'milk': 0, 'sugar': 0, 'tea': 0, 'coffee': 1, 'chocolate':1}
         self.assertEqual(mc.parse_order((0,0,0,0,1,1)), drink)
         
-    @unittest.skip
+    
     def test_edit_prices(self):
         mc = Machine()
 
         prices = copy.deepcopy(mc.prices)
         prices['coffee'] = 30
-        mc.edit_price(coffee=30)
+        mc.edit_prices(coffee=30)
         self.assertEqual(mc.prices,prices)
         
-        mc.edit_price(coffe=-10)
+        mc.edit_prices(coffee=-10)
         self.assertEqual(mc.prices,prices)
 
         prices['coffee'] = 40
         prices['tea'] = 20
 
-        mc.edit_price(coffee=40,tea=20)
+        mc.edit_prices(coffee=40,tea=20)
         self.assertEqual(mc.prices,prices)

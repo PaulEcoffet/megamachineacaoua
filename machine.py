@@ -29,7 +29,18 @@ class Machine(object):
         self._prices = Machine.DefaultPrices
 
     def edit_prices(self, **prices):
-        pass
+
+        for type_ in Machine.StocksType:
+            try:
+                new_val = prices[type_]
+            except KeyError:
+                pass
+            else:
+                if new_val > 0:
+                    self.prices[type_] = new_val
+                
+            
+            
 
     def edit_stocks(self, **stocks):
         """
