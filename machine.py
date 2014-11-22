@@ -27,8 +27,8 @@ class Machine(object):
         if not stock_prices:
             self._stock_prices = copy.copy(Machine.DefaultPrices)
         self._stocks = {key: 0 for key in Machine.StocksType}
-        self._cash = Coins((0 for key in Machine.CoinsType, Machine.CoinsType))
-        self._coins = Coins((0 for key in Machine.CoinsType, Machine.CoinsType))
+        self._cash = Coins((0 for key in Machine.CoinsType), Machine.CoinsType)
+        self._coins = Coins((0 for key in Machine.CoinsType), Machine.CoinsType)
         self._log = []
 
     def edit_prices(self, **prices):  # TODO SUGAR NOT WORKING WITH THIS CODE
@@ -73,7 +73,7 @@ class Machine(object):
     def order(self, command, coins_in):
         drink = Drink(command, self.stock_price)
         coins = Coins(coins_in, Machine.CoinsType)
-        coins_out = self.give_change(coins, Machine.MaxCashInput)
+        coins_out = self.compute_change(coins, Machine.MaxCashInput)
         coins.subtract(coins_out)
         if coins.value == 0:
             return None, coins_out  # Give all the cash
@@ -89,6 +89,9 @@ class Machine(object):
         self.add_to_cash(coins.subtract(coins_out))
         self.remove_stock(drink.stocks)
         return drink, coins_out
+
+    def compute_change(self, coins, value):
+        pass  # TODO return a coin object "change" so that
 
     @property
     def max_stocks(self):
