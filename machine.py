@@ -29,7 +29,19 @@ class Machine(object):
         self._prices = Machine.DefaultPrices
 
     def edit_prices(self, **prices):
+        """
+        Edit prices in the coffee machine.
+        It allows the user to change the price of one or more products
 
+        Usage:
+        ```
+        m.edit_prices(coffee=42, tea=30, chocolate=50)
+        ```
+        ```
+        new_prices = {'coffee': 80, 'tea': 50, 'chocolate' : 42}
+        m.edit_prices(**new_prices)
+        ```
+        """
         for type_ in Machine.StocksType:
             try:
                 new_val = prices[type_]

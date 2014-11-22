@@ -77,3 +77,21 @@ class MachineTestCase(unittest.TestCase):
 
         mc.edit_prices(coffee=40,tea=20)
         self.assertEqual(mc.prices,prices)
+
+    @unittest.skip
+    def test_get_change:
+        mc = Machine()
+
+        self.assertEqual(mc.deal_money([1,1,2,1,1]),([1,0,0,0,0]))
+        self.assertEqual(mc.deal_money([0,1,2,1,1]),([0,1,2,0,0]))
+        self.assertEqual(mc.deal_money([0,1,1,6,1]),([0,1,1,2,1]))
+        self.assertEqual(mc.deal_money([0,0,1,8,1]),([0,0,1,7,1]))
+        self.assertEqual(mc.deal_money([0,0,1,8,0]),([0,0,0,0,0]))
+
+        
+        
+
+
+
+        
+        
