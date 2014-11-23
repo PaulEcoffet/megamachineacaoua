@@ -1,7 +1,7 @@
 class Drink(object):
 
-    def __init__(self, command, price):
-        self.price = price
+    def __init__(self, command, prices):
+        self.stock_prices = prices
         self.stocks = {}
         self.stocks['tea'] = 0
         self.stocks['coffee'] = 0
@@ -19,10 +19,38 @@ class Drink(object):
     def price(self):
         total = 0
         for item in self.stocks:
-            total += self.stocks[item]*self.price[item]
+            try:
+                total += self.stocks[item]*self.stock_prices[item]
+            except TypeError:
+                total += self.stock_prices[item][self.stocks[item]]
         return total
 
     @property
     def has_beverage(self):
         return (self.stocks['tea'] > 0 or self.stocks['coffee'] > 0 or
                 self.stocks['chocolate'] > 0)
+
+    def __str__(self):
+        message = 'A cup of '
+        if self.stocks['tea']:
+            message += 'tea'
+        elif self.stocks['coffee'] and self.stocks['chocolate']:
+            if self.stocks['milk']:
+                message += 'macciato'
+            else:
+                message += 'cappucino'
+        elif self.stocks['chocolate']:
+            message += 'chocolate'
+        elif self.stocks['coffee']:
+            message += 'coffee'
+        else:
+            message = 'hot water'
+        if self.stocks['milk'] and not (self.stocks['coffee'] and
+                self.stocks['chocolate']):
+            message += ' with milk '
+            if self.stocks['sugar']:
+                message += 'and '
+        if self.stocks['sugar']:
+            message += str(self.stocks['sugar']) + ' sugars'
+        message += '.'
+        return message
