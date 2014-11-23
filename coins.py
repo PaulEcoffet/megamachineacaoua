@@ -30,7 +30,7 @@ class Coins(Counter):
     def __init__(self, coins, coins_type):
         super().__init__({value: amount for value, amount
                           in zip(coins_type, coins)})
-
+       
     @property
     def value(self):
         total = 0

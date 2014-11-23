@@ -102,8 +102,39 @@ class Machine(object):
         self.remove_stock(drink.stocks)
         return drink, coins_out
 
-    def compute_change(self, coins, value):
-        pass  # TODO return a coin object "change" so that
+    def compute_change(self, coins, value, change_value):
+        
+        coin_in = Coins(coins,value)
+        temp = Coins(coins,value)
+        
+        if coin_in.value <= change_value:
+            return(Coins([0,0,0,0,0], value))
+        
+        cost = coin_in.value - change_value
+        i = 0
+        save = (temp,i)
+        saves_a = []
+        
+        while True:
+            while temp.value > cost and i<(len(value)):
+                if temp[value[i]] >= 1:
+                    key_a = []
+                    val_a = []
+                    for key, valu in temp.items():
+                        key_a.append(key)
+                        val_a.append(valu)
+                    save =  (Coins(val_a,key_a),copy.copy(i))
+                    saves_a.append(save)
+                i += 1
+                
+            if temp.value == cost:
+                return(temp)
+            
+            if not saves_a:
+                return(coin_in)
+
+            temp,i = saves_a.pop(len(saves_a)-1)
+            temp[value[i]] -= 1
 
     @property
     def max_stocks(self):

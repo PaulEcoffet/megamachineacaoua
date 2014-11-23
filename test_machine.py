@@ -1,5 +1,6 @@
 import unittest
 from machine import Machine
+from coins import Coins
 import copy
 
 class MachineTestCase(unittest.TestCase):
@@ -62,7 +63,7 @@ class MachineTestCase(unittest.TestCase):
         self.assertEqual(mc.parse_order((0,0,0,0,1,1)), drink)
 
 
-    def test_edit_prices(self):
+    def test_edit_prices(self): #TODO need to test sugar
         mc = Machine()
 
         prices = copy.deepcopy(mc.stock_prices)
@@ -78,13 +79,25 @@ class MachineTestCase(unittest.TestCase):
         mc.edit_prices(coffee=40,tea=20)
         self.assertEqual(mc.stock_prices,prices)
 
-    @unittest.skip
-    def test_get_change():
+    
+    def test_get_change(self):
         mc = Machine()
 
-        self.assertEqual(mc.deal_money([1,1,2,1,1]),([1,0,0,0,0]))
-        self.assertEqual(mc.deal_money([0,1,2,1,1]),([0,1,2,0,0]))
-        self.assertEqual(mc.deal_money([0,1,1,6,1]),([0,1,1,2,1]))
-        self.assertEqual(mc.deal_money([0,0,1,8,1]),([0,0,1,7,1]))
-        self.assertEqual(mc.deal_money([0,0,1,8,0]),([0,0,0,0,0]))
+        self.assertEqual(mc.compute_change([1,1,2,1,1],\
+                                           [200, 100, 50, 20, 10],200).value,230)
+        
+        self.assertEqual(mc.compute_change([0,1,2,1,1],\
+                                           [200, 100, 50, 20, 10],200).value,30)
+        
+        self.assertEqual(mc.compute_change([0,1,1,6,1],\
+                                           [200, 100, 50, 20, 10],200).value,80)
+        
+        self.assertEqual(mc.compute_change([0,0,1,8,1],\
+                                           [200, 100, 50, 20, 10],200).value,20)
+        
+        self.assertEqual(mc.compute_change([0,0,1,8,0],\
+                                           [200, 100, 50, 20, 10],200).value,210)
+        
+
+        
 
