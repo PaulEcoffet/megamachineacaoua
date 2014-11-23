@@ -27,10 +27,25 @@ class Coins(Counter):
 
     ```
     """
-    def __init__(self, coins, coins_type):
-        super().__init__({value: amount for value, amount
-                          in zip(coins_type, coins)})
-       
+    def __init__(self, coins=None):
+        if coins:
+            if isinstance(coins, dict):
+                if (all(isinstance(key, int) for key in coins)
+                        and all(isinstance(value, int)
+                                for value in coins.values())):
+                    super().__init__(coins)
+                else:
+                    raise ValueError('Coins works only with integers')
+            elif isinstance(coins, list):
+                if all(isinstance(value, int) for value in coins):
+                    super().__init__(coins)
+                else:
+                    raise ValueError('Coins works only with integers')
+            else:
+                raise ValueError('Coins works only with integers')
+        else:
+            super().__init__()
+
     @property
     def value(self):
         total = 0

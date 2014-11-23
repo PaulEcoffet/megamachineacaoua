@@ -9,13 +9,15 @@ class CoinsTestCase(unittest.TestCase):
         coins_amount = [2, 10, 5, 1, 0]
         coins_type = [200, 100, 50, 20, 10]
         ref = Counter({200:2, 100:10, 50:5, 20:1, 10:0})
-        coins = Coins(coins_amount, coins_type)
+        coins = Coins({type_:amount for type_, amount
+                       in zip(coins_type, coins_amount)})
         self.assertEqual(coins, ref)
 
     def test_coins_value(self):
         coins_amount = [2, 10, 5, 1, 0]
         coins_type = [200, 100, 50, 20, 10]
-        coins = Coins(coins_amount, coins_type)
+        coins = Coins({type_:amount for type_, amount
+                       in zip(coins_type, coins_amount)})
         expected = 2*200 + 10*100 + 5*50 + 1*20
         self.assertEqual(coins.value, expected)
 
@@ -26,10 +28,13 @@ class CoinsTestCase(unittest.TestCase):
         coins_type = [200, 100, 50]
         coins_amount1 = [10, 2, 5]
         coins_amount2 = [2, 4, 3]
-        coins = Coins(coins_amount1, coins_type)
-        coins2 = Coins(coins_amount2, coins_type)
+        coins = Coins({type_:amount for type_, amount
+                       in zip(coins_type, coins_amount1)})
+        coins2 = Coins({type_:amount for type_, amount
+                       in zip(coins_type, coins_amount2)})
         coins.add(coins2)
-        self.assertEqual(coins, Coins([12, 6, 8], coins_type))
+        self.assertEqual(coins, Coins({type_:amount for type_, amount
+                                       in zip(coins_type, [12, 6, 8])}))
 
     # It would be a nice idea to ensure that coins are never in a negative
     # amount.
