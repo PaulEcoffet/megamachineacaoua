@@ -38,7 +38,7 @@ class MachineTestCase(unittest.TestCase):
         stock = copy.deepcopy(mc.stocks)
         mc.edit_stocks(coffee=50)
         stock['coffee'] = 50
-        self.assertEqual(mc.stocks, stock)
+        self.assertEqual(mc._stocks, stock)
         mc.edit_stocks(coffee=49)
         self.assertEqual(mc.stocks, stock)
         mc.edit_stocks(coffee=mc.max_stocks['coffee']+1)
@@ -47,7 +47,11 @@ class MachineTestCase(unittest.TestCase):
         stock['coffee'] = mc.max_stocks['coffee']
         self.assertEqual(mc.stocks, stock)
 
-    @unittest.skip
+        mc = Machine()
+        mc.refill_stocks()
+        self.assertEqual(mc.stocks, mc.max_stocks)
+
+    @unittest.skip  # Should be move in test_drink
     def test_parse_order(self):
         mc = Machine()
         drink = {'milk': 1, 'sugar': 3, 'coffee': 1, 'tea': 0, 'chocolate':0}
@@ -78,3 +82,17 @@ class MachineTestCase(unittest.TestCase):
         prices['tea'] = 20
         mc.edit_prices(coffee=40,tea=20)
         self.assertEqual(mc.stock_prices,prices)
+
+    def test_order(self):
+        mc = Machine()
+
+        mc.refill_stocks()
+        mc.refill_coins()
+
+        drink, change = mc.order((0,0,0,0,1,0), (0,1,0,0,0))
+        print(drink)
+        print(change)
+        print(mc.stocks)
+        print(mc._cash)
+        print(mc.coins)
+        print(mc.log)

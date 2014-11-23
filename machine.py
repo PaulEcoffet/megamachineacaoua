@@ -1,5 +1,5 @@
 import copy
-from logs import StockLog
+from logs import StockLog, CoinsLog
 from drink import Drink
 from coins import Coins
 
@@ -27,7 +27,7 @@ class Machine(object):
         if not stock_prices:
             self._stock_prices = copy.copy(Machine.DefaultPrices)
         self._stocks = {key: 0 for key in Machine.StocksType}
-        self._cash = Coins({key:0 for key in Machine.CoinsType})
+        self._cash = Coins()
         self._coins = Coins({key:0 for key in Machine.CoinsType})
         self._log = []
 
@@ -70,7 +70,7 @@ class Machine(object):
         m.edit_stocks(**new_stocks)
         ```
         """
-        prev_stocks = self.stocks
+        prev_stocks = copy.copy(self.stocks)
         for type_ in Machine.StocksType:
             try:
                 new_val = stocks[type_]
@@ -81,12 +81,42 @@ class Machine(object):
                     self.stocks[type_] = new_val
         self._log.append(StockLog(prev_stocks, self.stocks))
 
+    def refill_stocks(self):
+        self.edit_stocks(**self._max_stocks)
+
+    def edit_coins(self, coins):
+        prev_coins = copy.copy(self.coins)
+        for type_ in Machine.CoinsType:
+            try:
+                new_val = coins[type_]
+            except KeyError:
+                pass
+            else:
+                if self.coins[type_] < new_val <= self.max_coins[type_]:
+                    self.coins[type_] = new_val
+        self._log.append(CoinsLog(prev_coins, self.coins))
+
+    def refill_coins(self):
+        self.edit_coins(self._max_coins)
+
+    def _remove_stocks(self, **stocks):
+        prev_stocks = copy.copy(self.stocks)
+        for type_ in Machine.StocksType:
+            try:
+                to_remove = stocks[type_]
+            except KeyError:
+                pass
+            else:
+                self.stocks[type_] -= to_remove
+        self._log.append(StockLog(prev_stocks, self.stocks))
+
 
     def order(self, command, coins_in):
-        drink = Drink(command, self.stock_price)
-        coins = Coins(coins_in, Machine.CoinsType)
-        coins_out = self.compute_change(coins, Machine.MaxCashInput)
-        coins.subtract(coins_out)
+        drink = Drink(command, self.stock_prices)
+        coins = Coins({key: amount for amount, key
+                                   in zip(coins_in, Machine.CoinsType)})
+        coins_out = coins.compute_surplus(Machine.MaxCashInput)
+        coins -= coins_out
         if coins.value == 0:
             return None, coins_out  # Give all the cash
         if not drink.has_beverage:
@@ -97,9 +127,11 @@ class Machine(object):
                         'Not enough {} in stock'.format(item))
         if coins.value < drink.price:
             raise InvalidOrderException('Not Enough change to pay the order')
-        coins_out.add(self.give_change(coins, drink.price))
-        self.add_to_cash(coins.subtract(coins_out))
-        self.remove_stock(drink.stocks)
+        change = self.coins.compute_change(coins.value - drink.price)
+        self._coins.subtract(change)
+        coins_out += change
+        self._cash.add(coins)
+        self._remove_stocks(**drink.stocks)
         return drink, coins_out
 
     @property
