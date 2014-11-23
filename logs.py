@@ -36,3 +36,6 @@ class StockLog(Log):
             ))
         message = ', '.join(items)
         return message
+
+class CoinsLog(StockLog):
+    pass
