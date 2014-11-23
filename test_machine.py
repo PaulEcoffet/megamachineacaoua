@@ -1,5 +1,6 @@
 import unittest
-from machine import Machine
+from machine import Machine, InvalidOrderException, NotEnoughStockException
+from drink import Drink
 from coins import Coins
 import copy
 
@@ -67,7 +68,7 @@ class MachineTestCase(unittest.TestCase):
         self.assertEqual(mc.parse_order((0,0,0,0,1,1)), drink)
 
 
-    def test_edit_prices(self): #TODO need to test sugar
+    def test_edit_prices(self):
         mc = Machine()
 
         prices = copy.deepcopy(mc.stock_prices)
@@ -93,17 +94,88 @@ class MachineTestCase(unittest.TestCase):
         mc.edit_prices(sugar=[-10,5,15,20])
         self.assertEqual(mc.stock_prices,prices)
 
-        
-    def test_order(self):
+    def test_order_simple(self):
         mc = Machine()
-
         mc.refill_stocks()
         mc.refill_coins()
+        coins_stock = copy.copy(mc.coins)
 
         drink, change = mc.order((0,0,0,0,1,0), (0,1,0,0,0))
-        print(drink)
-        print(change)
-        print(mc.stocks)
-        print(mc._cash)
-        print(mc.coins)
-        print(mc.log)
+        self.assertEqual(drink.stocks, Drink((0,0,0,0,1,0),
+                                              mc.stock_prices).stocks)
+        self.assertEqual(change.value, 80)
+        self.assertEqual(mc.stocks, {'milk': 100, 'sugar':100, 'tea': 100,
+                                     'coffee': 99, 'chocolate': 100})
+        self.assertEqual(mc._cash.value, 100)
+        self.assertEqual(mc.coins.value, coins_stock.value - change.value)
+
+    def test_order_complex(self):
+        mc = Machine()
+        mc.refill_stocks()
+        mc.refill_coins()
+        coins_stock = copy.copy(mc.coins)
+
+        drink, change = mc.order((1,1,1,0,1,1), (1,1,0,0,0))
+        expected = Drink((1,1,1,0,1,1), mc.stock_prices)
+        self.assertEqual(drink.stocks, expected.stocks)
+        self.assertEqual(change.value, 300 - expected.price)
+        self.assertEqual(mc.stocks, {'milk': 99, 'sugar':97, 'tea': 100,
+                                     'coffee': 99, 'chocolate': 99})
+        self.assertEqual(mc._cash.value, 200)
+        # + 100 for next line because 100 is from user coins input
+        self.assertEqual(mc.coins.value, coins_stock.value - change.value + 100)
+
+    def test_order_fail_not_enough_cash(self):
+        mc = Machine()
+        mc.refill_stocks()
+        mc.refill_coins()
+        coins_stock = copy.copy(mc.coins)
+
+        self.assertRaises(InvalidOrderException, mc.order,(1,1,1,0,1,1),
+                          (0,0,0,1,0))
+        self.assertEqual(mc.stocks, {'milk': 100, 'sugar':100, 'tea': 100,
+                                     'coffee': 100, 'chocolate': 100})
+        self.assertEqual(mc._cash.value, 0)
+        # + 100 for next line because 100 is from user coins input
+        self.assertEqual(mc.coins.value, coins_stock.value)
+
+    def test_order_fail_not_drink(self):
+        mc = Machine()
+        mc.refill_stocks()
+        mc.refill_coins()
+        coins_stock = copy.copy(mc.coins)
+
+        self.assertRaises(InvalidOrderException, mc.order,(1,0,1,0,0,0),
+                          (0,0,0,1,0))
+        self.assertEqual(mc.stocks, {'milk': 100, 'sugar':100, 'tea': 100,
+                                     'coffee': 100, 'chocolate': 100})
+        self.assertEqual(mc._cash.value, 0)
+        # + 100 for next line because 100 is from user coins input
+        self.assertEqual(mc.coins.value, coins_stock.value)
+
+    def test_order_fail_no_stock(self):
+        mc = Machine()
+        mc.refill_coins()
+        coins_stock = copy.copy(mc.coins)
+
+        self.assertRaises(NotEnoughStockException, mc.order,(1,0,1,1,0,0),
+                          (0,0,0,1,0))
+        self.assertEqual(mc.stocks, {'milk': 0, 'sugar':0, 'tea': 0,
+                                     'coffee': 0, 'chocolate': 0})
+        self.assertEqual(mc._cash.value, 0)
+        # + 100 for next line because 100 is from user coins input
+        self.assertEqual(mc.coins.value, coins_stock.value)
+
+    def test_order_cant_get_maxcash(self):
+        mc = Machine()
+        mc.refill_stocks()
+        mc.refill_coins()
+        coins_stock = copy.copy(mc.coins)
+        drink, change = mc.order((1,1,1,0,1,1), (0,0,1,8,0))
+        self.assertIsNone(drink)
+        self.assertEqual(change, Coins({200:0, 100: 0, 50:1, 20:8, 10: 0}))
+        self.assertEqual(mc.stocks, {'milk': 100, 'sugar':100, 'tea': 100,
+                                     'coffee': 100, 'chocolate': 100})
+        self.assertEqual(mc._cash.value, 0)
+        # + 100 for next line because 100 is from user coins input
+        self.assertEqual(mc.coins.value, coins_stock.value)

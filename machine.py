@@ -5,6 +5,7 @@ from coins import Coins
 
 
 class InvalidOrderException(Exception): pass
+class NotEnoughStockException(Exception): pass
 
 class Machine(object):
     """
@@ -127,10 +128,11 @@ class Machine(object):
         drink = Drink(command, self.stock_prices)
         coins = Coins({key: amount for amount, key
                                    in zip(coins_in, Machine.CoinsType)})
-        coins_out = coins.compute_surplus(Machine.MaxCashInput)
+        try:
+            coins_out = coins.compute_surplus(Machine.MaxCashInput)
+        except Exception:  # Must be more explicit
+            return None, copy.copy(coins)  # Abort if 2€ is impossible to get
         coins -= coins_out
-        if coins.value == 0:
-            return None, coins_out  # Give all the cash
         if not drink.has_beverage:
             raise InvalidOrderException('You need to choose a beverage')
         for item in drink.stocks:
@@ -169,6 +171,10 @@ class Machine(object):
     @property
     def stock_prices(self):
         return self._stock_prices
+
+    @property
+    def coins(self):
+        return self._coins
 
     def __repr__(self):
         return 'Machine à café d\'usine'
