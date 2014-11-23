@@ -31,7 +31,7 @@ class Machine(object):
         self._coins = Coins({key:0 for key in Machine.CoinsType})
         self._log = []
 
-    def edit_prices(self, **prices): # TODO SUGAR NOT WORKING WITH THIS CODE
+    def edit_prices(self, **prices):
         """
         Edit prices in the coffee machine.
         It allows the user to change the price of one or more products
@@ -43,6 +43,8 @@ class Machine(object):
         ```
         new_prices = {'coffee': 80, 'tea': 50, 'chocolate' : 42}
         m.edit_prices(**new_prices)
+
+        Raises TypeError if prices is not numerical (or list for sugar)
         ```
         """
         for type_ in Machine.StocksType:
@@ -51,7 +53,17 @@ class Machine(object):
             except KeyError:
                 pass
             else:
-                if new_val > 0:
+                if type_ == 'sugar':
+                    if isinstance(new_val,list):                
+                        for i in range(0,3):
+                            if not 0 <= new_val[i] <= new_val[i+1]:
+                                break
+                            elif i == 2:
+                                self.stock_prices['sugar'] = new_val
+                    else:
+                        raise TypeError('Sugar must be a list of 4 digits')
+                            
+                elif new_val > 0:
                     self.stock_prices[type_] = new_val
 
     def edit_stocks(self, **stocks):
