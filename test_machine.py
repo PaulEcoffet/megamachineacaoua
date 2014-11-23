@@ -78,26 +78,3 @@ class MachineTestCase(unittest.TestCase):
         prices['tea'] = 20
         mc.edit_prices(coffee=40,tea=20)
         self.assertEqual(mc.stock_prices,prices)
-
-    
-    def test_get_change(self):
-        mc = Machine()
-
-        self.assertEqual(mc.compute_change([1,1,2,1,1],\
-                                           [200, 100, 50, 20, 10],200).value,230)
-        
-        self.assertEqual(mc.compute_change([0,1,2,1,1],\
-                                           [200, 100, 50, 20, 10],200).value,30)
-        
-        self.assertEqual(mc.compute_change([0,1,1,6,1],\
-                                           [200, 100, 50, 20, 10],200).value,80)
-        
-        self.assertEqual(mc.compute_change([0,0,1,8,1],\
-                                           [200, 100, 50, 20, 10],200).value,20)
-        
-        self.assertEqual(mc.compute_change([0,0,1,8,0],\
-                                           [200, 100, 50, 20, 10],200).value,210)
-        
-
-        
-

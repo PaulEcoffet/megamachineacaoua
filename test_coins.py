@@ -48,5 +48,29 @@ class CoinsTestCase(unittest.TestCase):
         self.assertEqual(coins, Coins({type_:amount for type_, amount
                                        in zip(coins_type, [12, 6, 8])}))
 
+
+    def test_get_change(self):
+        c = Coins({200: 1, 100: 1, 50: 2, 20: 1, 10:1 })
+        change = c.compute_change(200)
+        self.assertEqual(change.value, 230)
+
+        c = Coins({200: 0, 20: 1, 50: 2, 100: 1, 10: 1})
+        change = c.compute_change(200)
+        self.assertEqual(change.value,30)
+
+        c = Coins({200: 0, 20: 6, 50: 1, 100: 1, 10: 1})
+        change = c.compute_change(200)
+        self.assertEqual(change.value,80)
+
+        c = Coins({200: 0, 20: 8, 50: 1, 100: 0, 10: 1})
+        change = c.compute_change(200)
+        self.assertEqual(change.value,20)
+
+        c = Coins({200: 0, 20: 8, 50: 1, 100: 0, 10: 0})
+        self.assertRaises(Exception, c.compute_change, 200)
+
+
+
+
     # It would be a nice idea to ensure that coins are never in a negative
     # amount.

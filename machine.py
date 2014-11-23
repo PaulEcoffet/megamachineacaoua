@@ -23,12 +23,12 @@ class Machine(object):
         if not max_stocks:
             self._max_stocks = {key: 100 for key in Machine.StocksType}
         if not max_coins:
-            self._max_coins = {key: 100 for key in Machine.CoinsType}
+            self._max_coins = Coins({key: 100 for key in Machine.CoinsType})
         if not stock_prices:
             self._stock_prices = copy.copy(Machine.DefaultPrices)
         self._stocks = {key: 0 for key in Machine.StocksType}
-        self._cash = Coins((0 for key in Machine.CoinsType), Machine.CoinsType)
-        self._coins = Coins((0 for key in Machine.CoinsType), Machine.CoinsType)
+        self._cash = Coins({key:0 for key in Machine.CoinsType})
+        self._coins = Coins({key:0 for key in Machine.CoinsType})
         self._log = []
 
     def edit_prices(self, **prices): # TODO SUGAR NOT WORKING WITH THIS CODE
@@ -101,43 +101,6 @@ class Machine(object):
         self.add_to_cash(coins.subtract(coins_out))
         self.remove_stock(drink.stocks)
         return drink, coins_out
-
-    def compute_change(self, coins, value, change_value):
-        """
-        Return the amount that exceed 'change_value', if possible
-        
-        How to use:
-
-        > mmc.Compute_change([1,1,2,1,1],[200,100,50,20,10]), 200)
-        Coins({200:0, 100:1, 50:2, 20:0, 10:0})
-        """
-        
-        coin_in = Coins(coins,value)
-        temp = Coins(coins,value)
-        
-        if coin_in.value <= change_value:
-            return(Coins([0,0,0,0,0], value))
-        
-        cost = coin_in.value - change_value
-        i = 0
-        save = (temp,i)
-        saves_a = []
-        
-        while True:
-            while temp.value > cost and i<(len(value)):
-                if temp[value[i]] >= 1:
-                    save =  (copy.copy(temp),copy.copy(i))
-                    saves_a.append(save)
-                i += 1
-                
-            if temp.value == cost:
-                return(temp)
-            
-            if not saves_a:
-                return(coin_in)
-
-            temp,i = saves_a.pop(len(saves_a)-1)
-            temp[value[i]] -= 1
 
     @property
     def max_stocks(self):

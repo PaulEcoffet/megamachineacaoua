@@ -1,4 +1,5 @@
 from collections import Counter
+import copy
 
 class Coins(Counter):
     """
@@ -28,6 +29,20 @@ class Coins(Counter):
     ```
     """
     def __init__(self, coins=None):
+        """
+        Create a Coin object, expect a dict of coins or a list of coins.
+        If no argument is given, the coins object is empty
+
+        Usage:
+        ```
+        > Coins({200:2, 100:5})
+        Coins({200:2, 100:5})
+        > Coins([200, 200, 100, 100, 100, 100, 100])
+        Coins({200:2, 100:5})
+        > Coins()
+        Coins()
+        ```
+        """
         if coins:
             if isinstance(coins, dict):
                 if (all(isinstance(key, int) for key in coins)
@@ -46,8 +61,54 @@ class Coins(Counter):
         else:
             super().__init__()
 
+    def compute_change(self, change_value):
+        """
+        Return the amount that exceed 'change_value', if possible
+
+        How to use:
+
+        > coins.Compute_change(200)
+        Coins({200:0, 100:1, 50:2, 20:0, 10:0})
+        """
+        temp = copy.copy(self)
+        value = list(self.keys())
+
+        if self.value <= change_value:
+            raise Exception # MUST BE A MORE EXPLICIT EXCEPTION
+
+        cost = self.value - change_value
+        i = 0
+        save = (temp,i)
+        saves_a = []
+
+        while True:
+            while temp.value > cost and i < len(value):
+                if temp[value[i]] >= 1:
+                    save = (copy.copy(temp), copy.copy(i))
+                    saves_a.append(save)
+                i += 1
+
+            if temp.value == cost:
+                return temp
+
+            if not saves_a:
+                raise Exception
+
+            temp , i = saves_a.pop(len(saves_a)-1)
+            temp[value[i]] -= 1
+
     @property
     def value(self):
+        """
+        Return the sum of the values of all the coins in the object
+
+        Usage:
+        ```
+        > c = Coins({100: 4, 50: 1})
+        > c.value
+        450
+        ```
+        """
         total = 0
         for value, amount in self.items():
             total += value * amount
