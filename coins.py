@@ -6,11 +6,11 @@ class Coins(Counter):
 
     Usage:
     ```
-    > coins = Coins([0, 2, 4, 3, 1], [200, 100, 50, 20, 10])
+    > coins = Coins({200: 0, 100: 2, 50: 4, 20: 3, 10: 1})
     > coins.value
     470
 
-    > coins2 = Coins([0, 0, 0, 2, 0], [200, 100, 50, 20, 10])
+    > coins2 = Coins({200:0, 100:0, 50:0, 20:2, 10:0})
     > coins + coins2
     Coins({200:0, 100:2, 50:4, 20:5, 10:1})
 
