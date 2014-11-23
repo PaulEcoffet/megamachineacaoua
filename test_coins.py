@@ -49,25 +49,25 @@ class CoinsTestCase(unittest.TestCase):
                                        in zip(coins_type, [12, 6, 8])}))
 
 
-    def test_get_change(self):
+    def test_remove_surplus(self):
         c = Coins({200: 1, 100: 1, 50: 2, 20: 1, 10:1 })
-        change = c.compute_change(200)
+        change = c.compute_surplus(200)
         self.assertEqual(change.value, 230)
 
         c = Coins({200: 0, 20: 1, 50: 2, 100: 1, 10: 1})
-        change = c.compute_change(200)
+        change = c.compute_surplus(200)
         self.assertEqual(change.value,30)
 
         c = Coins({200: 0, 20: 6, 50: 1, 100: 1, 10: 1})
-        change = c.compute_change(200)
+        change = c.compute_surplus(200)
         self.assertEqual(change.value,80)
 
         c = Coins({200: 0, 20: 8, 50: 1, 100: 0, 10: 1})
-        change = c.compute_change(200)
+        change = c.compute_surplus(200)
         self.assertEqual(change.value,20)
 
         c = Coins({200: 0, 20: 8, 50: 1, 100: 0, 10: 0})
-        self.assertRaises(Exception, c.compute_change, 200)
+        self.assertRaises(Exception, c.compute_surplus, 200)
 
 
 

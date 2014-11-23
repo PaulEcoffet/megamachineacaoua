@@ -61,7 +61,7 @@ class Coins(Counter):
         else:
             super().__init__()
 
-    def compute_change(self, change_value):
+    def compute_surplus(self, change_value):
         """
         Return the amount that exceed 'change_value', if possible
 
@@ -74,7 +74,7 @@ class Coins(Counter):
         value = list(self.keys())
 
         if self.value <= change_value:
-            raise Exception # MUST BE A MORE EXPLICIT EXCEPTION
+            return Coins()
 
         cost = self.value - change_value
         i = 0
@@ -96,6 +96,22 @@ class Coins(Counter):
 
             temp , i = saves_a.pop(len(saves_a)-1)
             temp[value[i]] -= 1
+
+    def compute_change(self, change_value):
+        """
+        Compute coins so as too reach `change_value`, if possible
+        """
+        if change_value > self.value:
+            raise Exception # Need a more explicit exception
+        coins_out = Coins()
+        for key in sorted(list(self.keys()), reverse=True):
+            coins_out[key] = min(change_value // key, self[key])
+            change_value -= coins_out[key]*key
+            if change_value == 0:
+                break
+        if change_value != 0:
+            raise Exception("Cannot give money for this amount") # TODO Not explicit
+        return coins_out
 
     @property
     def value(self):
