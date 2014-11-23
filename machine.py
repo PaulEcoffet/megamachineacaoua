@@ -103,6 +103,14 @@ class Machine(object):
         return drink, coins_out
 
     def compute_change(self, coins, value, change_value):
+        """
+        Return the amount that exceed 'change_value', if possible
+        
+        How to use:
+
+        > mmc.Compute_change([1,1,2,1,1],[200,100,50,20,10]), 200)
+        Coins({200:0, 100:1, 50:2, 20:0, 10:0})
+        """
         
         coin_in = Coins(coins,value)
         temp = Coins(coins,value)
@@ -118,12 +126,7 @@ class Machine(object):
         while True:
             while temp.value > cost and i<(len(value)):
                 if temp[value[i]] >= 1:
-                    key_a = []
-                    val_a = []
-                    for key, valu in temp.items():
-                        key_a.append(key)
-                        val_a.append(valu)
-                    save =  (Coins(val_a,key_a),copy.copy(i))
+                    save =  (copy.copy(temp),copy.copy(i))
                     saves_a.append(save)
                 i += 1
                 
