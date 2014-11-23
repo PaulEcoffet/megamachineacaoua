@@ -12,6 +12,13 @@ class CoinsTestCase(unittest.TestCase):
         coins = Coins({type_:amount for type_, amount
                        in zip(coins_type, coins_amount)})
         self.assertEqual(coins, ref)
+        self.assertEqual(Coins(), Coins())
+
+    def test_coins_not_working_init(self):
+        self.assertRaises(ValueError, Coins, ['gibi', 4, 5, 5])
+        self.assertRaises(ValueError, Coins, {100: 'gégène'})
+        self.assertRaises(ValueError, Coins, {'#YOLO': 20})
+        self.assertRaises(ValueError, Coins, 4)
 
     def test_coins_value(self):
         coins_amount = [2, 10, 5, 1, 0]
@@ -21,6 +28,11 @@ class CoinsTestCase(unittest.TestCase):
         expected = 2*200 + 10*100 + 5*50 + 1*20
         self.assertEqual(coins.value, expected)
 
+    def test_coins_copy(self):
+        coins = Coins({100: 2, 50: 4})
+        copied_coins = copy.copy(coins)
+        self.assertEqual(coins, copied_coins)
+        self.assertIsNot(coins, copied_coins)
 
     # Just testing the alias. Since it's Counter implementation,
     # we can assume it works as expected
