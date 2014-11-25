@@ -14,7 +14,7 @@ class Log(object):
         return self._message
 
     def __str__(self):
-        str_time = time.strftime('%a %d %b %H:%M:%S', self.time)
+        str_time = time.strftime('%d %b %H:%M:%S', self.time)
         return '[' + str_time + '] ' + self.type + ': ' + self.message
 
 class StockLog(Log):
@@ -32,10 +32,56 @@ class StockLog(Log):
         for key in sorted(self.prev_stock):
             items.append('{key}: {prev} -> {new} ({diff:+d})'.format(
                 key=key, prev=self.prev_stock[key], new=self.cur_stock[key],
-                diff=self.cur_stock[key]-self.prev_stock[key]
-            ))
+                diff=self.cur_stock[key]-self.prev_stock[key]))
         message = ', '.join(items)
         return message
 
+
 class CoinsLog(StockLog):
-    pass
+
+    def __init__(self, prev_coins, cur_coins):
+            super().__init__(prev_coins, cur_coins)
+            self.type = 'Coins Update'
+
+
+class OrderLog(Log):
+    """Drink Log"""
+
+    def __init__(self, drink, coins_in):
+        super().__init__()
+        self.type = '** Order **'
+        self.drink = copy.copy(drink)
+        self.coins = copy.copy(coins_in)
+
+    @property
+    def message(self):
+        message = str(self.drink) + ' which cost ' + str(self.drink.price)
+        message += ', the customer gave ' + str(self.coins.value)
+        return message
+
+
+class EndOrderLog(Log):
+
+    def __init__(self):
+        super().__init__()
+        self.type = '** End of the order **'
+
+    @property
+    def message(self):
+        return "That's all folks"
+
+
+class CashLog(Log):
+    """"""
+
+    def __init__(self, previous, current):
+        super().__init__()
+        self.type = 'Cash Update'
+        self.previous = copy.copy(previous)
+        self.current = copy.copy(current)
+
+    @property
+    def message(self):
+        return '{prev} -> {new} ({diff:+d})'.format(prev=self.previous.value,
+            new=self.current.value,
+            diff=self.current.value-self.previous.value)

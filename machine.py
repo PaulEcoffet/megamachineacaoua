@@ -1,5 +1,5 @@
 import copy
-from logs import StockLog, CoinsLog
+from logs import StockLog, CoinsLog, OrderLog, CashLog, EndOrderLog
 from drink import Drink
 from coins import Coins
 
@@ -144,11 +144,23 @@ class Machine(object):
         if coins.value < drink.price:
             raise InvalidOrderException('Not Enough change to pay the order')
         change = self.coins.compute_change(coins.value - drink.price)
-        self._coins.subtract(change)
+        self._log.append(OrderLog(drink, coins))
+        self.remove_change(change)
         coins_out += change
-        self._cash.add(coins)
         self._remove_stocks(**drink.stocks)
+        self.add_to_cash(coins)
+        self._log.append(EndOrderLog())
         return drink, coins_out
+
+    def add_to_cash(self, coins):
+        prev = copy.copy(self._cash)
+        self._cash.add(coins)
+        self._log.append(CashLog(prev, self._cash))
+
+    def remove_change(self, change):
+        prev_coins = copy.copy(self._coins)
+        self._coins.subtract(change)
+        self._log.append(CoinsLog(prev_coins, self._coins))
 
     @property
     def max_stocks(self):
@@ -169,6 +181,10 @@ class Machine(object):
     @property
     def log(self):
         return self._log
+
+    @property
+    def pretty_log(self):
+        return '\n'.join(str(log) for log in self._log)
 
     @property
     def stock_prices(self):

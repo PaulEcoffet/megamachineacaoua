@@ -50,7 +50,8 @@ class Drink(object):
             message += ' with milk '
             if self.stocks['sugar']:
                 message += 'and '
+        elif self.stocks['sugar']:
+            message += ' with '
         if self.stocks['sugar']:
             message += str(self.stocks['sugar']) + ' sugars'
-        message += '.'
         return message
