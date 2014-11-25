@@ -17,7 +17,7 @@ class MachineTestCase(unittest.TestCase):
 
     def test_init_default_maxcoins(self):
         mc = Machine()
-        for key in Machine.CoinsType:
+        for key in Machine.CoinsContainers:
             self.assertEqual(mc.max_coins[key], 100)
 
     def test_init_empty_stocks(self):
@@ -90,7 +90,7 @@ class MachineTestCase(unittest.TestCase):
 
         mc.edit_prices(sugar=[10,5,15,20])
         self.assertEqual(mc.stock_prices,prices)
-        
+
         mc.edit_prices(sugar=[-10,5,15,20])
         self.assertEqual(mc.stock_prices,prices)
 
@@ -147,7 +147,7 @@ class MachineTestCase(unittest.TestCase):
 
         self.assertRaises(InvalidOrderException, mc.order,(1,0,1,0,0,0),
                           (0,0,0,1,0))
-        self.assertEqual(mc.stocks, {'milk': 100, 'sugar':100, 'tea': 100,
+        self.assertEqual(mc.stocks, {'milk': 100, 'sugar': 100, 'tea': 100,
                                      'coffee': 100, 'chocolate': 100})
         self.assertEqual(mc._cash.value, 0)
         # + 100 for next line because 100 is from user coins input
@@ -160,7 +160,7 @@ class MachineTestCase(unittest.TestCase):
 
         self.assertRaises(NotEnoughStockException, mc.order,(1,0,1,1,0,0),
                           (0,0,0,1,0))
-        self.assertEqual(mc.stocks, {'milk': 0, 'sugar':0, 'tea': 0,
+        self.assertEqual(mc.stocks, {'milk': 0, 'sugar': 0, 'tea': 0,
                                      'coffee': 0, 'chocolate': 0})
         self.assertEqual(mc._cash.value, 0)
         # + 100 for next line because 100 is from user coins input
@@ -174,7 +174,7 @@ class MachineTestCase(unittest.TestCase):
         drink, change = mc.order((1,1,1,0,1,1), (0,0,1,8,0))
         self.assertIsNone(drink)
         self.assertEqual(change, Coins({200:0, 100: 0, 50:1, 20:8, 10: 0}))
-        self.assertEqual(mc.stocks, {'milk': 100, 'sugar':100, 'tea': 100,
+        self.assertEqual(mc.stocks, {'milk': 100, 'sugar': 100, 'tea': 100,
                                      'coffee': 100, 'chocolate': 100})
         self.assertEqual(mc._cash.value, 0)
         # + 100 for next line because 100 is from user coins input

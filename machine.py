@@ -14,7 +14,8 @@ class Machine(object):
     """
 
     MaxCashInput = 200
-    CoinsType = [200, 100, 50, 20, 10]
+    CoinsType = [200, 100, 50, 20, 10, 5]
+    CoinsContainers = [50, 20, 10, 5]
     StocksType = ['coffee', 'tea', 'chocolate', 'milk', 'sugar']
     DefaultPrices = {'coffee': 20, 'tea': 10, 'chocolate': 30,
                      'milk': 5, 'sugar': [0, 5, 15, 15]}  # On peut aussi faire
@@ -24,12 +25,13 @@ class Machine(object):
         if not max_stocks:
             self._max_stocks = {key: 100 for key in Machine.StocksType}
         if not max_coins:
-            self._max_coins = Coins({key: 100 for key in Machine.CoinsType})
+            self._max_coins = Coins({key: 100 for key
+                                     in Machine.CoinsContainers})
         if not stock_prices:
             self._stock_prices = copy.copy(Machine.DefaultPrices)
         self._stocks = {key: 0 for key in Machine.StocksType}
         self._cash = Coins()
-        self._coins = Coins({key:0 for key in Machine.CoinsType})
+        self._coins = Coins({key:0 for key in Machine.CoinsContainers})
         self._log = []
 
     def edit_prices(self, **prices):
@@ -55,7 +57,7 @@ class Machine(object):
                 pass
             else:
                 if type_ == 'sugar':
-                    if isinstance(new_val,list):                
+                    if isinstance(new_val,list):
                         for i in range(0,3):
                             if not 0 <= new_val[i] <= new_val[i+1]:
                                 break
@@ -63,7 +65,7 @@ class Machine(object):
                                 self.stock_prices['sugar'] = new_val
                     else:
                         raise TypeError('Sugar must be a list of 4 digits')
-                            
+
                 elif new_val > 0:
                     self.stock_prices[type_] = new_val
 
