@@ -55,3 +55,6 @@ target/
 
 # Rope stuff:
 .ropeproject
+
+# Windows shit
+thumbs.db
