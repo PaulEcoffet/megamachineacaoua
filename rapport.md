@@ -3,10 +3,10 @@
 % Vendredi 28 Novembre 2014
 
 
-Nous allons ici détailler les fonctions utilisées dans notre programme (signature et
-axiome) ainsi que faire l'analyse de leur complexité en notation Grand-O
-Après chaque fonction, nous indiquerons le fichier correspondant au(x) test(s)
-que nous avons effectué, ainsi que les noms des tests.
+Nous allons ici détailler les fonctions utilisées dans notre programme (signature
+et axiome) ainsi que faire l'analyse de leur complexité en notation **O**.
+Après chaque méthode, nous indiquerons le fichier correspondant aux tests
+que nous avons effectués, ainsi que les noms des tests.
 
 # Fonctions de Machine, mode fonctionnement #
 
