@@ -1,7 +1,7 @@
 import unittest
 from machine import Machine, InvalidOrderException, NotEnoughStockException
 from drink import Drink
-from coins import Coins
+from coins import Coins, NoChangePossibleException
 import copy
 
 class MachineTestCase(unittest.TestCase):
@@ -180,3 +180,9 @@ class MachineTestCase(unittest.TestCase):
         self.assertEqual(mc._cash.value, 0)
         # + 100 for next line because 100 is from user coins input
         self.assertEqual(mc.coins.value, coins_stock.value)
+
+    def test_order_cant_give_money_back(self):
+        mc = Machine()
+        mc.refill_stocks()
+        self.assertRaises(NoChangePossibleException, mc.order,(0,0,0,0,1,0),
+                          (0,1,0,0,0))

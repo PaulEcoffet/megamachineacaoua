@@ -1,6 +1,8 @@
 from collections import Counter
 import copy
 
+class NoChangePossibleException(Exception): pass
+
 class Coins(Counter):
     """
     Class that represents Coins
@@ -92,7 +94,7 @@ class Coins(Counter):
                 return temp
 
             if not saves_a:
-                raise Exception
+                raise NoChangePossibleException("Cannot give change for this amount")
 
             temp , i = saves_a.pop(len(saves_a)-1)
             temp[value[i]] -= 1
@@ -102,7 +104,7 @@ class Coins(Counter):
         Compute coins so as too reach `change_value`, if possible
         """
         if change_value > self.value:
-            raise Exception # Need a more explicit exception
+            raise NoChangePossibleException("Not enough money in stock")
         coins_out = Coins()
         for key in sorted(list(self.keys()), reverse=True):
             coins_out[key] = min(change_value // key, self[key])
@@ -110,7 +112,7 @@ class Coins(Counter):
             if change_value == 0:
                 break
         if change_value != 0:
-            raise Exception("Cannot give money for this amount") # TODO Not explicit
+            raise NoChangePossibleException("Cannot give change for this amount")
         return coins_out
 
     @property

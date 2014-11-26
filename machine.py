@@ -97,6 +97,9 @@ class Machine(object):
         self._log.append(StockLog(prev_stocks, self.stocks))
 
     def refill_stocks(self):
+        """
+        Fill all the stock containers to their max values.
+        """
         self.edit_stocks(**self._max_stocks)
 
     def edit_coins(self, coins):
@@ -112,9 +115,16 @@ class Machine(object):
         self._log.append(CoinsLog(prev_coins, self.coins))
 
     def refill_coins(self):
+        """
+        Fill all the coins containers to their max values.
+        """
         self.edit_coins(self._max_coins)
 
     def _remove_stocks(self, **stocks):
+        """
+        Remove from the stock the amounts given in `stocks`.
+        Doesn't prevent the stock to have a negative value. Be careful
+        """
         prev_stocks = copy.copy(self.stocks)
         for type_ in Machine.StocksType:
             try:
@@ -127,6 +137,22 @@ class Machine(object):
 
 
     def order(self, command, coins_in):
+        """
+        Return the order asked by the customer with his `command` if he has
+        given enough money in `coins_in` to pay his drinks.
+
+        Return a drink and the change if possible
+        If coins_in > Machine.MaxCashInput, the program will reject coins until
+        Machine.MaxCashInput is reached. If it's impossible, it will return all
+        the change and no drink.
+
+        Will raise `InvalidOrderException` if the order is invalid or if there
+        isn't enough money to pay the drin.
+        Will raise `NotEnoughStockException` if there isn't enough stock to
+        fulfill the order.
+        Will raise `coins.NoChangePossibleException` if there isn't enough
+        money in stock to give change back.
+        """
         drink = Drink(command, self.stock_prices)
         coins = Coins({key: amount for amount, key
                                    in zip(coins_in, Machine.CoinsType)})
@@ -153,11 +179,18 @@ class Machine(object):
         return drink, coins_out
 
     def add_to_cash(self, coins):
+        """
+        Add the Coins `coins` in the box with all the cash.
+        It will be logged
+        """
         prev = copy.copy(self._cash)
         self._cash.add(coins)
         self._log.append(CashLog(prev, self._cash))
 
     def remove_change(self, change):
+        """
+        Remove from the coins container enough money to give the amount `change`
+        """
         prev_coins = copy.copy(self._coins)
         self._coins.subtract(change)
         self._log.append(CoinsLog(prev_coins, self._coins))
@@ -204,12 +237,9 @@ class MachineFunc(object):
     def __init__(self, machine_factory):
         self.m = machine_factory
 
-    def edit_stock(self, *args, **kwargs):
-        raise NotImplemented()
-
     def order(self, *args, **kwargs):
         return self.m.order(*args, **kwargs)
 
     @property
-    def fact(self):
+    def factory(self):
         return self.m
