@@ -124,7 +124,6 @@ class MachineTestCase(unittest.TestCase):
         self.assertEqual(mc._cash.value, 200)
         # + 100 for next line because 100 is from user coins input
         self.assertEqual(mc.coins.value, coins_stock.value - change.value + 100)
-        print(mc.pretty_log)
 
     def test_order_fail_not_enough_cash(self):
         mc = Machine()
@@ -184,5 +183,5 @@ class MachineTestCase(unittest.TestCase):
     def test_order_cant_give_money_back(self):
         mc = Machine()
         mc.refill_stocks()
-        self.assertRaises(NoChangePossibleException, mc.order,(0,0,0,0,1,0),
+        self.assertRaises(NoChangePossibleException, mc.order, (0,0,0,0,1,0),
                           (0,1,0,0,0))

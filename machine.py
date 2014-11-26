@@ -243,3 +243,12 @@ class MachineFunc(object):
     @property
     def factory(self):
         return self.m
+
+
+
+# Run the tests on import (as asked)
+
+import unittest
+
+testsuite = unittest.defaultTestLoader.discover('.')
+unittest.TextTestRunner().run(testsuite)
