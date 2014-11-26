@@ -11,8 +11,8 @@ que nous avons effectués, ainsi que les noms des tests.
 # Fonctions de Machine, mode fonctionnement #
 
 * order :
-	1. signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \emptyset \times Monnaie)$
-	2. axiome : $  $
+	1. signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \emptyset \times \text{Monnaie})$
+	2. axiome :
 	3. Complexité : ON DOIT FAIRE LES AUTRES AVANT
 	4. Test : *test_machine.py*
 		* test_order_simple()
@@ -26,27 +26,29 @@ que nous avons effectués, ainsi que les noms des tests.
 # Fonctions de Machine, mode Maintenance #
 
 * edit_prices :
-	1. signature :$\text{(dictionnaire\_prix)} \Rightarrow \emptyset \cup \text{Error}$
+	1. signature : $\text{(dictionnaire\_prix)} \Rightarrow \emptyset \cup \text{Error}$
 	2. axiome : $$
-	3. Complexité :
+	3. Complexité : $ O(n) $ avec n le nombre de produits payant
 	4. Test : test_machine.py
 		* test_edit_prices
 
 * edit_stocks :
-	1. signature :
+	1. signature : $\text{(dictionnaire\_stocks)} \Rightarrow \emptyset \cup \text{Error}$
 	2. axiome :
-	3. Complexité :
-	4. Test : test_machine.py - test_edit_stocks
+	3. Complexité : $O(n)$ avec n le nombre de stocks différents
+	4. Test : test_machine.py 
+		test_edit_stocks
 
-* refill_stocks :
-	1. signature :
+* refill_stocks :  
+	1. signature : $\emptyset \Rightarrow \emptyset$
 	2. axiome :
-	3. Complexité :
+		* $\forall x \in \text{stocks} = x, refill_stocks()$
+	3. Complexité : $ O(n) $ avec n le nombre de stocks différents
 	4. Test : test_machine.py - test_edit_prices
 
 * edit_coins :
 	1. signature :
-	2.axiome :
+	2. axiome :
 	3. Complexité :
 	4. Test : test_machine.py - test_edit_prices
 
