@@ -1,5 +1,5 @@
 import unittest
-from coins import Coins
+from coins import Coins, NoChangePossibleException
 from collections import Counter
 import copy
 
@@ -13,6 +13,10 @@ class CoinsTestCase(unittest.TestCase):
                        in zip(coins_type, coins_amount)})
         self.assertEqual(coins, ref)
         self.assertEqual(Coins(), Coins())
+        coins_repeat = [200, 200, 50, 10]
+        coins = Coins(coins_repeat)
+        ref = Counter({200: 2, 50: 1, 10:1})
+        self.assertEqual(coins, ref)
 
     def test_coins_not_working_init(self):
         self.assertRaises(ValueError, Coins, ['gibi', 4, 5, 5])
@@ -67,10 +71,21 @@ class CoinsTestCase(unittest.TestCase):
         self.assertEqual(change.value,20)
 
         c = Coins({200: 0, 20: 8, 50: 1, 100: 0, 10: 0})
-        self.assertRaises(Exception, c.compute_surplus, 200)
+        self.assertRaises(NoChangePossibleException, c.compute_surplus, 200)
 
+        c = Coins({200: 0, 20: 4, 50: 0, 100: 0, 10: 0})
+        change = c.compute_surplus(200)
+        self.assertEqual(change, Coins())
 
+    def test_compute_change(self):
+        c = Coins({200: 0, 100: 1, 50: 100, 20: 100, 10:100})
+        change = c.compute_change(200)
+        self.assertEqual(change.value, 200)
 
+    def test_compute_change_not_enough_cash(self):
+        c = Coins({200: 0, 100: 1, 50: 0, 20: 0, 10: 0})
+        self.assertRaises(NoChangePossibleException, c.compute_change, 200)
 
-    # It would be a nice idea to ensure that coins are never in a negative
-    # amount.
+    def test_compute_change_impossible(self):
+        c = Coins({200: 1, 100: 1, 50: 1, 20: 0, 10: 1})
+        self.assertRaises(NoChangePossibleException, c.compute_change, 70)

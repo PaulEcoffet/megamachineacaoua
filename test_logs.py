@@ -5,7 +5,7 @@ import time
 from coins import Coins
 from drink import Drink
 
-from logs import Log, StockLog, CoinsLog, OrderLog, EndOrderLog
+from logs import Log, StockLog, CoinsLog, OrderLog, EndOrderLog, CashLog
 
 prev_stock = {'coffee': 40, 'tea': 20, 'sugar': 0, 'chocolate': 4,
               'milk': 3}
@@ -62,3 +62,8 @@ class LogTestCase(unittest.TestCase):
         ftime =  time.strftime('%d %b %H:%M:%S', log.time)
         self.assertEqual(str(log),
             '['+ ftime + '] ** End of the order **: That\'s all folks')
+
+    def test_cash_log_message(self):
+        log = CashLog(prev_coins, new_coins)
+        message = '80 -> 65 (-15)'
+        self.assertEqual(log.message, message)
