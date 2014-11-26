@@ -11,6 +11,7 @@ que nous avons effectués, ainsi que les noms des tests.
 # Fonctions de Machine, mode fonctionnement #
 
 * order :
+---------
 	1. signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \emptyset \times \text{Monnaie})$
 	2. axiome :
 	3. Complexité : ON DOIT FAIRE LES AUTRES AVANT
@@ -26,42 +27,70 @@ que nous avons effectués, ainsi que les noms des tests.
 # Fonctions de Machine, mode Maintenance #
 
 * edit_prices :
+---------------
 	1. signature : $\text{(dictionnaire\_prix)} \Rightarrow \emptyset \cup \text{Error}$
-	2. axiome : $$
-	3. Complexité : $ O(n) $ avec n le nombre de produits payant
-	4. Test : test_machine.py
+	2. axiome :
+		* $\forall$ stock $\in$ \{'thé', 'café', 'lait', 'chocolat'\}, \
+			$\forall$ prix $\geq$ 0\
+			edit_prices(stock=prix) $\Rightarrow$ machine._stock_prices[stock] = prix
+		
+		* Si stock = 'sucre'
+			$\forall$ 0 $\leq\text{prix}_i\leq\text{prix}_{i+1}$, i $\in$ $[0,3]$
+				edit_prices(sucre= [$\text{prix}_i$]) \
+				machine._stock_prices[stock] = [($\text{prix}_i$)] $\forall$i $\in$ [0,3]
+	3. Complexité : $O(n)$ avec n le nombre de produits payant
+	4. Test : *test_machine.py*
 		* test_edit_prices
 
 * edit_stocks :
+---------------
 	1. signature : $\text{(dictionnaire\_stocks)} \Rightarrow \emptyset \cup \text{Error}$
-	2. axiome :
-	3. Complexité : $O(n)$ avec n le nombre de stocks différents
-	4. Test : test_machine.py 
-		test_edit_stocks
+	2. axiome : 
+		* $\forall$ stock $\in$ \{'thé', 'café', 'lait', 'chocolat', 'sucre'\}, \
+			$\forall$ machine.quantite[stock] < quantite $\leq$  machine.quantite_max[stock] \
+			machine.edit_stock(stock=quantite) $\Rightarrow$ machine.quantite[stock] = quantite
 
-* refill_stocks :  
+		* $\forall$ stock $\in$ \{'thé', 'café', 'lait', 'chocolat', 'sucre'\}, \
+			$\forall$ quantite $\leq$ machine.quantite[stock] ou quantite > machine.quantite_max[stock] \
+			machine.edit_stock(stock, quantite) $\Rightarrow$ machine.quantite[stock] = machine.quantite[stock]
+
+	3. Complexité : $O(n)$ avec n le nombre de stocks différents
+	4. Test : *test_machine.py*
+		* test_edit_stocks
+
+* refill_stocks :
+---------------  
 	1. signature : $\emptyset \Rightarrow \emptyset$
-	2. axiome :
-		* $\forall x \in \text{stocks} = x, refill_stocks()$
-	3. Complexité : $ O(n) $ avec n le nombre de stocks différents
-	4. Test : test_machine.py - test_edit_prices
+	2. axiome : 
+		* $\forall$ stock $\in$ \{'thé', 'café', 'lait', 'chocolat', 'sucre'\}, \
+		machine.refill_stock() $\Rightarrow$ machine.quantite[stock] \
+		= machine.quantite_max[stock]
+	3. Complexité : $O(n)$ avec n le nombre de stocks différents
+	4. Test : *test_machine.py* 
+		* test_edit_prices
 
 * edit_coins :
+---------------
 	1. signature :
 	2. axiome :
 	3. Complexité :
-	4. Test : test_machine.py - test_edit_prices
+	4. Test : *test_machine.py*
+		* test_edit_prices
 
 * refill_coins :
+---------------
 	1. signature :
 	2.axiome :
 	3. Complexité :
-	4. Test : test_machine.py - test_edit_prices
+	4. Test : *test_machine.py*
+		* test_edit_prices
 
 * _remove_stocks :
+------------------
 	1. signature :
 	2.axiome :
 	3. Complexité :
-	4. Test : test_machine.py - test_edit_prices
+	4. Test : *test_machine.py*
+		* test_edit_prices
 
 # Fonctions de Coins #
