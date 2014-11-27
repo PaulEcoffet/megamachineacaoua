@@ -112,7 +112,7 @@ refill_coins :
 remove_stocks :
 ------------------
 1. Signature : stock_dict $\Rightarrow \emptyset$
-2.Axiomes :
+2. Axiomes :
 	* $\forall$ A = $\text{(stock\_type, value)}_i$, $i \in \mathbb{N}$,
 	  $\text{stock\_type}_i$ $\in$ Machine.StocksType \
 		machine.remove(A) $\Rightarrow$ $\forall$ stock_type, value $\in A$,
