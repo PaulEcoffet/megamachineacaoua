@@ -215,3 +215,46 @@ has_beverage
 3. Complexité : $O(1)$
 4. Tests: *test_drink.py*
 	* test_drink_has_beverage
+	
+# Méthodes de Log #
+
+Méthode Log général
+----------
+
+1. Signature: 
+2. Axiomes:
+3. Complexité : $O(1)$
+4. Tests: *test_logs.py*
+
+Méthode CoinsLog
+----------
+
+1. Signature: 
+2. Axiomes:
+3. Complexité : $O(1)$
+4. Tests: *test_logs.py*
+
+Méthode OrderLog
+----------
+
+1. Signature: 
+2. Axiomes:
+3. Complexité : $O(1)$
+4. Tests: *test_logs.py*
+
+Méthode EndOrderLog
+----------
+
+1. Signature: 
+2. Axiomes:
+3. Complexité : $O(1)$
+4. Tests: *test_logs.py*
+
+Méthode CashLog
+----------
+
+1. Signature: 
+2. Axiomes:
+3. Complexité : $O(1)$
+4. Tests: *test_logs.py*
+
