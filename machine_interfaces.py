@@ -23,7 +23,7 @@ class MachineMaintenance(object):
         self.m.edit_prices(**prices)
 
     def edit_stocks(self, **stocks):
-        self.m.edit_stock(**stocks)
+        self.m.edit_stocks(**stocks)
 
     def refill_stocks(self):
         self.m.refill_stocks()
