@@ -65,12 +65,15 @@ class Coins(Counter):
 
     def compute_surplus(self, change_value):
         """
-        Return the amount that exceed 'change_value', if possible
+        Return coins in self so that (self - coins).value = change_value,
+        if possible
 
-        How to use:
-
+        Usage:
+        ```
+        >>> coins = Coins({200:1, 100: 1, 50: 2, 20: 0, 10:0})
         >>> coins.Compute_change(200)
         Coins({200:0, 100:1, 50:2, 20:0, 10:0})
+        ```
         """
         temp = copy.copy(self)
         value = list(self.keys())

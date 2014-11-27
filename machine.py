@@ -30,10 +30,16 @@ class Machine(object):
                                      in Machine.CoinsContainers})
         if not stock_prices:
             self._stock_prices = copy.copy(Machine.DefaultPrices)
+        self.reset()
+        self._log = []
+
+    def reset(self):
+        """
+        Reset the machine
+        """
         self._stocks = {key: 0 for key in Machine.StocksType}
         self._cash = Coins()
         self._coins = Coins({key:0 for key in Machine.CoinsContainers})
-        self._log = []
 
     def edit_prices(self, **prices):
         """
