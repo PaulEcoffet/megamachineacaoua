@@ -10,19 +10,28 @@ que nous avons effectués, ainsi que les noms des tests.
 
 # Fonctions de Machine, mode fonctionnement #
 
-order : #TODO
+order : 
 ---------
+
 1. Signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \text{Error} \cup \emptyset \times \text{Monnaie})$
 2. Axiomes :
-	$\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \
-	tel que $\forall$ type $\in$ Commande.stock,
-	Commande.stock[type] $\neq$ Machine.Stock[type]
+
+	* $\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \ 
+	tel que $\forall$ type $\in$ Commande.stock, \ Commande.stock[type] $\neq$ Machine.Stock[type] \
+	$\forall \text{Monnaie} \in$ Coins \ tel que Monnaie.compute_surplus(Machine.MaxCashInput) $\neq$ Error \
+	et Monnaie.value > Commande.price \ order(Commande, Monnaie) $\Rightarrow$ Drink(command), change
+	
+	* $\forall \text{Commande} \notin$ {Drink}, Ensemble de tous les drinks possibles\
 	$\forall \text{Monnaie} \in$ Coins \
-	tel que Monnaie.compute_surplus(Machine.MaxCashInput) $\neq$ Error
-	et Monnaie.value > Commande.price 
+	order(Commande, Monnaie) $\Rightarrow$ None, Monnaie
+
+    * $\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \
+	$\forall \text{Monnaie} \in$ Coins \ tel que Monnaie.compute_surplus(Machine.MaxCashInput) = Error \
+	order(Commande, Monnaie) $\Rightarrow$ None, Monnaie
+
+3. Complexité : Max($\forall$ functions $\in$ order: Complexité(functions)) = $O(2^n)$ \
+	complexité de Coins.compute_surplus, avec $n$ le nombre de pièces dans coins.
 	
-	
-3. Complexité : ON DOIT FAIRE LES AUTRES AVANT
 4. Test : *test_machine.py*
 	* test_order_simple()
 	* test_order_complex()
