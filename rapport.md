@@ -4,7 +4,7 @@
 
 
 Nous allons ici détailler les fonctions utilisées dans notre programme (signature
-et axiome) ainsi que faire l'analyse de leur complexité en notation **O**.
+et axiomes) ainsi que faire l'analyse de leur complexité en notation **O**.
 Après chaque méthode, nous indiquerons le fichier correspondant aux tests
 que nous avons effectués, ainsi que les noms des tests.
 
@@ -12,8 +12,8 @@ que nous avons effectués, ainsi que les noms des tests.
 
 order : #TODO
 ---------
-1. signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \text{Error} \cup \emptyset \times \text{Monnaie})$
-2. axiome :
+1. Signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \text{Error} \cup \emptyset \times \text{Monnaie})$
+2. Axiomes :
 	$\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \
 	tel que $\forall$ type $\in$ Commande.stock,
 	Commande.stock[type] $\neq$ Machine.Stock[type]
@@ -36,8 +36,8 @@ order : #TODO
 
 reset :
 -------
-1. signature : $\emptyset \Rightarrow \emptyset$
-2. axiome :
+1. Signature : $\emptyset \Rightarrow \emptyset$
+2. Axiomes :
 	$$\text{machine.reset()} \Rightarrow
 	\begin{cases}
 		\text{machine.\_stocks[type]} = 0 & \forall \text{type} \in \text{machine.StocksType} \\
@@ -47,8 +47,8 @@ reset :
 
 edit_prices :
 ---------------
-1. signature : $\text{(dictionnaire\_prix)} \Rightarrow \emptyset \cup \text{Error}$
-2. axiome :
+1. Signature : $\text{(dictionnaire\_prix)} \Rightarrow \emptyset \cup \text{Error}$
+2. Axiomes :
 	* $\forall$ stock $\in$ \{'thé', 'café', 'lait', 'chocolat'\}, \
 		$\forall$ prix $\geq$ 0\
 		edit_prices(stock=prix) $\Rightarrow$ machine._stock_prices[stock] = prix
@@ -63,8 +63,8 @@ edit_prices :
 
 edit_stocks :
 ---------------
-1. signature : $\text{(dictionnaire\_stocks)} \Rightarrow \emptyset \cup \text{Error}$
-2. axiome :
+1. Signature : $\text{(dictionnaire\_stocks)} \Rightarrow \emptyset \cup \text{Error}$
+2. Axiomes :
 	* $\forall$ stock $\in$ \{'thé', 'café', 'lait', 'chocolat', 'sucre'\}, \
 		$\forall$ machine.quantite[stock] < quantite $\leq$  machine.quantite_max[stock] \
 		machine.edit_stock(stock=quantite) $\Rightarrow$ machine.quantite[stock] = quantite
@@ -79,8 +79,8 @@ edit_stocks :
 
 refill_stocks :
 ---------------  
-1. signature : $\emptyset \Rightarrow \emptyset$
-2. axiome :
+1. Signature : $\emptyset \Rightarrow \emptyset$
+2. Axiomes :
 	* $\forall$ stock $\in$ Machine.StocksType, \
 	machine.refill_stock() $\Rightarrow$ machine.quantite[stock] \
 	= machine.quantite_max[stock]
@@ -90,8 +90,8 @@ refill_stocks :
 
 edit_coins :
 ---------------
-1. signature : $\text{coins}$ $\Rightarrow$ $\emptyset$
-2. axiome :
+1. Signature : $\text{coins}$ $\Rightarrow$ $\emptyset$
+2. Axiomes :
 	* $\forall$ pieces $\in$ machine.CoinsType et pieces $\in$ coins, \
 		 $\forall$  0 $\leq$ coins[pieces] $\leq$ machine._max_coins[pieces] \
 		edit_coins[coins] $\Rightarrow \text{machine.\_coins[pieces] = coins[pieces]},\ \forall \text{pieces}$
@@ -101,8 +101,8 @@ edit_coins :
 
 refill_coins :
 ---------------
-1. signature : $\emptyset \Rightarrow \emptyset$
-2. axiome :
+1. Signature : $\emptyset \Rightarrow \emptyset$
+2. Axiomes :
 	* machine.refill_coins() $\Rightarrow$ $\forall$ valeur $\in$ Machine.CoinsType,\
 		machine.coins[valeur] = machine.max_coins[valeur]
 3. Complexité : $O(n)$ avec $n$ le nombre de types de pièces différents
@@ -111,8 +111,8 @@ refill_coins :
 
 remove_stocks :
 ------------------
-1. signature : stock_dict $\Rightarrow \emptyset$
-2.axiome :
+1. Signature : stock_dict $\Rightarrow \emptyset$
+2.Axiomes :
 	* $\forall$ A = $\text{(stock\_type, value)}_i$, $i \in \mathbb{N}$,
 	  $\text{stock\_type}_i$ $\in$ Machine.StocksType \
 		machine.remove(A) $\Rightarrow$ $\forall$ stock_type, value $\in A$,
@@ -124,8 +124,8 @@ remove_stocks :
 
 add_to_cash :
 -------------
-1. signature: Coins $\Rightarrow \emptyset$
-2. axiome :
+1. Signature: Coins $\Rightarrow \emptyset$
+2. Axiomes :
 	* $\forall \text{coins} \in \text{Coins}$, \
 		machine.add_to_cash(coins) $\Rightarrow$ $\forall$ type, quantite $\in$ coins, \
 		machine.cash[type] = machine.cash[type] + quantite
@@ -136,7 +136,7 @@ Coins hérite de collections.Counter.
 compute_surplus
 ---------------
 1. Signature: value $\Rightarrow$ change $\in$ Coins $\cup$ NoChangePossibleException
-2. Axiome:
+2. Axiomes:
 	* $\forall$ coins $in$ Coins, coins.value $\geq$ value, \
 	$$\text{coins.compute\_surplus(x)} \Rightarrow
 	\begin{cases}
@@ -203,3 +203,6 @@ has_beverage
 	drink.has_beverage $\Rightarrow$ T
 	* $\forall$ drink avec $\forall x \in$ {'chocolate','tea','coffee'}, $x \notin$ drink.stock, \
 	drink.has_beverage $\Rightarrow$ F
+3. Complexité : $O(1)$
+4. Tests: *test_drink.py*
+	* test_drink_has_beverage
