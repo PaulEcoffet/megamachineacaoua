@@ -14,25 +14,15 @@ order : #TODO
 ---------
 1. signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \text{Error} \cup \emptyset \times \text{Monnaie})$
 2. axiome :
-	* $\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \
-		tel que $\forall$ type $\in$ Commande.stock, \
-		Commande.stock[type] $\neq$ Machine.Stock[type] \
+	$\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \
+	tel que $\forall$ type $\in$ Commande.stock,
+	Commande.stock[type] $\neq$ Machine.Stock[type]
 	$\forall \text{Monnaie} \in$ Coins \
-		tel que Monnaie.compute_surplus(Machine.MaxCashInput) $\neq$ Error \
-		et Monnaie.value > Commande.price \
-		order(Commande, Monnaie) $\Rightarrow$ Drink(command), change
+	tel que Monnaie.compute_surplus(Machine.MaxCashInput) $\neq$ Error
+	et Monnaie.value > Commande.price 
 	
-	* $\forall \text{Commande} \notin$ {Drink}, Ensemble de tous les drinks possibles\
-		$\forall \text{Monnaie} \in$ Coins \
-		order(Commande, Monnaie) $\Rightarrow$ None, Monnaie
-		
-	* $\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \
-	$\forall \text{Monnaie} \in$ Coins \
-	tel que Monnaie.compute_surplus(Machine.MaxCashInput) = Error \
-		order(Commande, Monnaie) $\Rightarrow$ None, Monnaie
-		
-3. Complexité : Max($\forall$ functions $\in$ order: Complexité(functions)) = $O(2^n)$ \
-complexité de Coins.compute_surplus, avec $n$ le nombre de pièces dans coins.
+	
+3. Complexité : ON DOIT FAIRE LES AUTRES AVANT
 4. Test : *test_machine.py*
 	* test_order_simple()
 	* test_order_complex()
@@ -145,16 +135,71 @@ Coins hérite de collections.Counter.
 
 compute_surplus
 ---------------
-1. signature: value $\Rightarrow$ change $\in$ Coins $\cup$ NoChangePossibleException
-2. axiome:
+1. Signature: value $\Rightarrow$ change $\in$ Coins $\cup$ NoChangePossibleException
+2. Axiome:
 	* $\forall$ coins $in$ Coins, coins.value $\geq$ value, \
 	$$\text{coins.compute\_surplus(x)} \Rightarrow
 	\begin{cases}
-		(\text{coins - change}).\text{value} = \text{value} &\text{if possible} \\
-		\text{NoChangePossibleException} &\text{if impossible}
+		(\text{coins - change}).\text{value} = \text{value} &\text{si possible} \\
+		\text{NoChangePossibleException} &\text{si impossible}
 	\end{cases}
 	$$
 	* $\forall$ coins $in$ Coins, coins.value $\leq$ value, \
 	coins.compute_surplus(x) $\Rightarrow$ NoChangePossibleException
-3. complexité: $O(2^n)$, $n$ le nombre de pièces dans coins.
+3. Complexité: $O(2^n)$, $n$ le nombre de pièces dans coins.
+4. Tests: *test_coins.py*
+	* test_compute_surplus
+
 	
+
+compute_change
+--------------
+
+1. Signature : change_value $\Rightarrow$ Coins
+2. Axiomes :
+	* $\forall$ coins $in$ Coins, coins.value $\geq$ value, \
+		$$\text{coins.compute\_change(x)} \Rightarrow
+		\begin{cases}
+			(\text{change}).\text{value} = \text{change\_value} &\text{si possible} \\
+			\text{NoChangePossibleException} &\text{si impossible par division}
+		\end{cases}
+	$$
+	* $\forall$ change, change $>$ coins.value,\
+		coins.self_compute(change) $\Rightarrow$ NoChangePossibleException
+3. Complexité: $O(n)$ avec $n$ le nombre de types de pièces dans coins.
+4. Tests: *test_coins.py*
+	* test_compute_change
+	* test_compute_change_not_enough_cash
+	* test_compute_change_impossible
+
+
+value
+-----
+1. Signature : $\emptyset \Rightarrow \mathbb{N}$
+2. Axiomes :
+	* $\forall$ coins $in$ Coins, $\text{coins} = \text{(valeur, quantite)}_{n \in \mathbb{N}}$,\
+	$$\text{coins.value} = \sum_{i=1}^n \text{valeur}_i \times \text{quantite}_i$$
+3. Complexité: $O(n)$ avec $n$ le nombre de types de pièces dans coins.
+4. Tests: *test_coins.py*
+	* test_coins_value
+
+# Méthodes de Drink #
+
+price
+-----
+1. Signature : $\emptyset \Rightarrow \mathbb{N}$
+2. Axiomes :
+	* $\forall$ stock_i $\in$ drink.stocks, $\forall$ price_i $\in$ drink.stock_prices, i $\in${1, ..., n}\
+		$$\text{drink.price} = \sum_{i=1}^{n} \text{stock}_i \times \text{price}_i$$
+3. Complexité : $O(n)$ avec $n$ le nombre de types de stock différents dans drink.
+4. Tests: *test_drink.py*
+	* test_drink_price
+
+has_beverage
+------------
+1. Signature: $\emptyset \Rightarrow {T, F}$
+2. Axiomes :
+	* $\forall$ drink avec $\exists x \in$ {'chocolate','tea','coffee'}, $x \in$ drink.stock, \
+	drink.has_beverage $\Rightarrow$ T
+	* $\forall$ drink avec $\forall x \in$ {'chocolate','tea','coffee'}, $x \notin$ drink.stock, \
+	drink.has_beverage $\Rightarrow$ F

@@ -66,5 +66,9 @@ class MachineMaintenance(object):
     def coins(self):
         return self.m.coins
 
+    @property
+    def factory(self):
+        return self.m
+
     def __repr__(self):
         return 'Machine à café en maintenance'
