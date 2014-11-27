@@ -52,22 +52,6 @@ class MachineTestCase(unittest.TestCase):
         mc.refill_stocks()
         self.assertEqual(mc.stocks, mc.max_stocks)
 
-    @unittest.skip  # Should be move in test_drink
-    def test_parse_order(self):
-        mc = Machine()
-        drink = {'milk': 1, 'sugar': 3, 'coffee': 1, 'tea': 0, 'chocolate':0}
-        self.assertEqual(mc.parse_order((1,1,1,0,1,0)), drink)
-
-        drink = {'milk': 0, 'sugar': 0, 'coffee': 0, 'tea': 0, 'chocolate':0}
-        self.assertEqual(mc.parse_order((0,0,0,0,0,0)), drink)
-
-        drink = {'milk': 0, 'sugar': 0, 'tea': 1, 'coffee': 0, 'chocolate':0}
-        self.assertEqual(mc.parse_order((0,0,0,1,1,1)), drink)
-
-        drink = {'milk': 0, 'sugar': 0, 'tea': 0, 'coffee': 1, 'chocolate':1}
-        self.assertEqual(mc.parse_order((0,0,0,0,1,1)), drink)
-
-
     def test_edit_prices(self):
         mc = Machine()
 
@@ -100,7 +84,7 @@ class MachineTestCase(unittest.TestCase):
         mc.refill_coins()
         coins_stock = copy.copy(mc.coins)
 
-        drink, change = mc.order((0,0,0,0,1,0), (0,1,0,0,0))
+        drink, change = mc.order((0,1,0,0,0), (0,0,0,0,1,0))
         self.assertEqual(drink.stocks, Drink((0,0,0,0,1,0),
                                               mc.stock_prices).stocks)
         self.assertEqual(change.value, 80)
@@ -115,7 +99,7 @@ class MachineTestCase(unittest.TestCase):
         mc.refill_coins()
         coins_stock = copy.copy(mc.coins)
 
-        drink, change = mc.order((1,1,1,0,1,1), (1,1,0,0,0))
+        drink, change = mc.order((1,1,0,0,0), (1,1,1,0,1,1))
         expected = Drink((1,1,1,0,1,1), mc.stock_prices)
         self.assertEqual(drink.stocks, expected.stocks)
         self.assertEqual(change.value, 300 - expected.price)
@@ -131,8 +115,8 @@ class MachineTestCase(unittest.TestCase):
         mc.refill_coins()
         coins_stock = copy.copy(mc.coins)
 
-        self.assertRaises(InvalidOrderException, mc.order,(1,1,1,0,1,1),
-                          (0,0,0,1,0))
+        self.assertRaises(InvalidOrderException, mc.order,(0,0,0,1,0),
+                          (1,1,1,0,1,1))
         self.assertEqual(mc.stocks, {'milk': 100, 'sugar':100, 'tea': 100,
                                      'coffee': 100, 'chocolate': 100})
         self.assertEqual(mc._cash.value, 0)
@@ -145,8 +129,8 @@ class MachineTestCase(unittest.TestCase):
         mc.refill_coins()
         coins_stock = copy.copy(mc.coins)
 
-        self.assertRaises(InvalidOrderException, mc.order,(1,0,1,0,0,0),
-                          (0,0,0,1,0))
+        self.assertRaises(InvalidOrderException, mc.order,(0,0,0,1,0),
+                          (1,0,1,0,0,0))
         self.assertEqual(mc.stocks, {'milk': 100, 'sugar': 100, 'tea': 100,
                                      'coffee': 100, 'chocolate': 100})
         self.assertEqual(mc._cash.value, 0)
@@ -158,8 +142,8 @@ class MachineTestCase(unittest.TestCase):
         mc.refill_coins()
         coins_stock = copy.copy(mc.coins)
 
-        self.assertRaises(NotEnoughStockException, mc.order,(1,0,1,1,0,0),
-                          (0,0,0,1,0))
+        self.assertRaises(NotEnoughStockException, mc.order,(0,0,0,1,0),
+                          (1,0,1,1,0,0))
         self.assertEqual(mc.stocks, {'milk': 0, 'sugar': 0, 'tea': 0,
                                      'coffee': 0, 'chocolate': 0})
         self.assertEqual(mc._cash.value, 0)
@@ -171,7 +155,7 @@ class MachineTestCase(unittest.TestCase):
         mc.refill_stocks()
         mc.refill_coins()
         coins_stock = copy.copy(mc.coins)
-        drink, change = mc.order((1,1,1,0,1,1), (0,0,1,8,0))
+        drink, change = mc.order((0,0,1,8,0), (1,1,1,0,1,1))
         self.assertIsNone(drink)
         self.assertEqual(change, Coins({200:0, 100: 0, 50:1, 20:8, 10: 0}))
         self.assertEqual(mc.stocks, {'milk': 100, 'sugar': 100, 'tea': 100,
@@ -183,5 +167,5 @@ class MachineTestCase(unittest.TestCase):
     def test_order_cant_give_money_back(self):
         mc = Machine()
         mc.refill_stocks()
-        self.assertRaises(NoChangePossibleException, mc.order, (0,0,0,0,1,0),
-                          (0,1,0,0,0))
+        self.assertRaises(NoChangePossibleException, mc.order, (0,1,0,0,0),
+                          (0,0,0,0,1,0))

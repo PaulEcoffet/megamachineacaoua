@@ -53,7 +53,7 @@ class CoinsTestCase(unittest.TestCase):
                                        in zip(coins_type, [12, 6, 8])}))
 
 
-    def test_remove_surplus(self):
+    def test_compute_surplus(self):
         c = Coins({200: 1, 100: 1, 50: 2, 20: 1, 10:1 })
         change = c.compute_surplus(200)
         self.assertEqual(change.value, 230)

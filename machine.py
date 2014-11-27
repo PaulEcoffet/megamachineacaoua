@@ -150,7 +150,7 @@ class Machine(object):
         self._log.append(StockLog(prev_stocks, self.stocks))
 
 
-    def order(self, command, coins_in):
+    def order(self, coins_in, command):
         """
         Return the order asked by the customer with his `command` if he has
         given enough money in `coins_in` to pay his drinks.
