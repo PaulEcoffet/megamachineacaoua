@@ -12,8 +12,16 @@ que nous avons effectués, ainsi que les noms des tests.
 
 order : #TODO
 ---------
-1. signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \emptyset \times \text{Monnaie})$
+1. signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \text{Error} \cup \emptyset \times \text{Monnaie})$
 2. axiome :
+	$\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \
+	tel que $\forall$ type $\in$ Commande.stock,
+	Commande.stock[type] $\neq$ Machine.Stock[type]
+	$\forall \text{Monnaie} \in$ Coins \
+	tel que Monnaie.compute_surplus(Machine.MaxCashInput) $\neq$ Error
+	et Monnaie.value > Commande.price 
+	
+	
 3. Complexité : ON DOIT FAIRE LES AUTRES AVANT
 4. Test : *test_machine.py*
 	* test_order_simple()
