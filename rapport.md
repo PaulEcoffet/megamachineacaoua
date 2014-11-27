@@ -135,16 +135,50 @@ Coins hérite de collections.Counter.
 
 compute_surplus
 ---------------
-1. signature: value $\Rightarrow$ change $\in$ Coins $\cup$ NoChangePossibleException
-2. axiome:
+1. Signature: value $\Rightarrow$ change $\in$ Coins $\cup$ NoChangePossibleException
+2. Axiome:
 	* $\forall$ coins $in$ Coins, coins.value $\geq$ value, \
 	$$\text{coins.compute\_surplus(x)} \Rightarrow
 	\begin{cases}
-		(\text{coins - change}).\text{value} = \text{value} &\text{if possible} \\
-		\text{NoChangePossibleException} &\text{if impossible}
+		(\text{coins - change}).\text{value} = \text{value} &\text{si possible} \\
+		\text{NoChangePossibleException} &\text{si impossible}
 	\end{cases}
 	$$
 	* $\forall$ coins $in$ Coins, coins.value $\leq$ value, \
 	coins.compute_surplus(x) $\Rightarrow$ NoChangePossibleException
-3. complexité: $O(2^n)$, $n$ le nombre de pièces dans coins.
+3. Complexité: $O(2^n)$, $n$ le nombre de pièces dans coins.
+4. Tests: *test_coins.py*
+	* test_compute_surplus
+
 	
+
+compute_change
+--------------
+
+1. Signature : change_value $\Rightarrow$ Coins
+2. Axiomes :
+	* $\forall$ coins $in$ Coins, coins.value $\geq$ value, \
+		$$\text{coins.compute\_change(x)} \Rightarrow
+		\begin{cases}
+			(\text{change}).\text{value} = \text{change\_value} &\text{si possible} \\
+			\text{NoChangePossibleException} &\text{si impossible par division}
+		\end{cases}
+	$$
+	* $\forall$ change, change $>$ coins.value,\
+		coins.self_compute(change) $\Rightarrow$ NoChangePossibleException
+3. Complexité: $O(n)$ avec $n$ le nombre de types de pièces dans coins.
+4. Tests: *test_coins.py*
+	* test_compute_change
+	* test_compute_change_not_enough_cash
+	* test_compute_change_impossible
+
+
+value
+-----
+1. Signature : $\emptyset \Rightarrow \mathbb{N}$
+2. Axiomes :
+	* $\forall$ coins $in$ Coins, $\text{coins} = \text{(valeur, quantite)}_{n \in \mathbb{N}}$,\
+	$\text{coins.value} = \sum_{i=1}^n \text{valeur}_i \times \text{quantite}_i$
+3. Complexité: $O(n)$ avec $n$ le nombre de types de pièces dans coins.
+4. Tests: *test_coins.py*
+	* test_coins_value
