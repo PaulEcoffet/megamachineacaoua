@@ -106,6 +106,11 @@ class Machine(object):
         self.edit_stocks(**self._max_stocks)
 
     def edit_coins(self, coins):
+        """
+        Change the number of coins available in containers.
+        Doesn't change the number if the new value isn't
+        between 0 and self._max_coins
+        """
         prev_coins = copy.copy(self.coins)
         for type_ in Machine.CoinsType:
             try:
@@ -123,7 +128,7 @@ class Machine(object):
         """
         self.edit_coins(self._max_coins)
 
-    def _remove_stocks(self, **stocks):
+    def _remove_stocks(self, **stocks): #Need to handle negative value ?
         """
         Remove from the stock the amounts given in `stocks`.
         Doesn't prevent the stock to have a negative value. Be careful

@@ -10,7 +10,7 @@ que nous avons effectués, ainsi que les noms des tests.
 
 # Fonctions de Machine, mode fonctionnement #
 
-* order :
+* order : #TODO
 ---------
 	1. signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \emptyset \times \text{Monnaie})$
 	2. axiome :
@@ -71,9 +71,12 @@ que nous avons effectués, ainsi que les noms des tests.
 
 * edit_coins :
 ---------------
-	1. signature :
+	1. signature : $\text{(coins}$ $\Rightarrow$ $\emptyset$
 	2. axiome :
-	3. Complexité :
+		* $\forall$ pieces $\in$ machine.CoinsType and $\in$ coins
+			$\forall$  0 $\leq$ coins[pieces] $\leq$ machine._max_coins[pieces]
+			edit_coins[coins] $\Rightarrow$
+	3. Complexité : $O(n)$ avec n le nombre de type pièces différentes
 	4. Test : *test_machine.py*
 		* test_edit_prices
 
@@ -85,7 +88,7 @@ que nous avons effectués, ainsi que les noms des tests.
 	4. Test : *test_machine.py*
 		* test_edit_prices
 
-* _remove_stocks :
+* remove_stocks :
 ------------------
 	1. signature :
 	2.axiome :
