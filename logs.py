@@ -38,6 +38,9 @@ class StockLog(Log):
 
 
 class CoinsLog(StockLog):
+    """
+    Log the coins operations.
+    """
 
     def __init__(self, prev_coins, cur_coins):
             super().__init__(prev_coins, cur_coins)

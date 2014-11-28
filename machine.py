@@ -133,7 +133,7 @@ class Machine(object):
         """
         self.edit_coins(self._max_coins)
 
-    def _remove_stocks(self, **stocks): #Need to handle negative value ?
+    def _remove_stocks(self, **stocks):
         """
         Remove from the stock the amounts given in `stocks`.
         Doesn't prevent the stock to have a negative value. Be careful
@@ -244,7 +244,7 @@ class Machine(object):
         return 'Machine à café d\'usine'
 
 
-# Run the tests on import (as asked)
+# Run the tests on import (as asked in the specs)
 
 import unittest
 
