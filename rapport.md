@@ -36,7 +36,7 @@ order :
 3. Complexité : Max($\forall$ functions $\in$ order: Complexité(functions)) = $O(2^n)$ \
 	complexité de Coins.compute_surplus, avec $n$ le nombre de pièces dans coins.
 	
-4. Test : *test_machine.py*
+4. Tests : *test_machine.py*
 	* test_order_simple()
 	* test_order_complex()
 	* test_order_fail_not_enough_cash()
@@ -57,6 +57,7 @@ reset :
 		\text{machine.\_coins[type]} = 0 & \forall \text{type} \in \text{machine.CoinssType} \\
 		\text{machine.\_cash} = 0 &
 	\end{cases}$$
+3. Complexité : $O(1)
 
 edit_prices :
 ---------------
@@ -206,7 +207,7 @@ price
 	* $\forall$ stock_i $\in$ drink.stocks, $\forall$ price_i $\in$ drink.stock_prices, i $\in${1, ..., n}\
 		$$\text{drink.price} = \sum_{i=1}^{n} \text{stock}_i \times \text{price}_i$$
 3. Complexité : $O(n)$ avec $n$ le nombre de types de stock différents dans drink.
-4. Tests: *test_drink.py*
+4. Test: *test_drink.py*
 	* test_drink_price
 
 has_beverage
@@ -218,7 +219,7 @@ has_beverage
 	* $\forall$ drink avec $\forall x \in$ {'chocolate','tea','coffee'}, $x \notin$ drink.stock, \
 	drink.has_beverage $\Rightarrow$ F
 3. Complexité : $O(1)$
-4. Tests: *test_drink.py*
+4. Test: *test_drink.py*
 	* test_drink_has_beverage
 	
 # Méthodes des Logs #
@@ -230,7 +231,7 @@ Log.message
 2. Axiomes: $\forall$ log._message \
 	log.message = log._message
 3. Complexité : $O(1)$
-4. Tests: *test_logs.py*
+4. Test: *test_logs.py*
 	* test_log
 	
 StockLog.message
@@ -258,7 +259,7 @@ OrderLog.message
 	the customer gave {monnaie.value}"
 	
 3. Complexité : $O(1)$
-4. Tests: *test_logs.py*
+4. Test: *test_logs.py*
 	* test_cash_log_message
 
 EndOrderLog.message
@@ -268,7 +269,7 @@ EndOrderLog.message
 2. Axiomes: 
 	* EndOrderLog.message() $\Rightarrow$ "That's all folks"
 3. Complexité : $O(1)$
-4. Tests: *test_logs.py*
+4. Test: *test_logs.py*
 	* test_end_order_log_message
 	
 CoinsLog
@@ -288,6 +289,6 @@ CashLog.message
 	"$\text{monnaie}_i \rightarrow \text{monnaie}_{i-1} (\text{monnaie}_i-\text{monnaie}_{i-1})$"
 	
 3. Complexité : $O(1)$
-4. Tests: *test_logs.py*
+4. Test: *test_logs.py*
 	* test_cash_log_message
 

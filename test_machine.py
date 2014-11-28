@@ -32,7 +32,7 @@ class MachineTestCase(unittest.TestCase):
 
     def test_init_empty_log(self):
         mc = Machine()
-        self.assertEqual(mc.log, [])  # TODO log d'initialisation?
+        self.assertEqual(mc.log, []) 
 
     def test_edit_stocks(self):
         mc = Machine()
