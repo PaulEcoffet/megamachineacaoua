@@ -34,7 +34,7 @@ class Machine(object):
 
     def reset(self):
         """
-        Reset the machine
+        Reset the machine, keep the log
         """
         self._stocks = {key: 0 for key in Machine.StocksType}
         self._cash = Coins()
