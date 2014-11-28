@@ -3,7 +3,7 @@ Mega Machine à Café
 
 Exemple d'utilisation de la *Méga Machine à Café*:
 
-```
+```python
 >>> import machine
 ..................................
 ----------------------------------------------------------------------
