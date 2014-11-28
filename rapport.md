@@ -2,7 +2,6 @@
 % Paul Ecoffet; Mathieu Seurin
 % Vendredi 28 Novembre 2014
 
-
 Nous allons ici détailler les fonctions utilisées dans notre programme (signature
 et axiomes) ainsi que faire l'analyse de leur complexité en notation **O**.
 Après chaque méthode, nous indiquerons le fichier correspondant aux tests
@@ -13,22 +12,27 @@ que nous avons effectués, ainsi que les noms des tests.
 order : 
 ---------
 
-1. Signature : $\text{(Monnaie, Commande)} \Rightarrow (Boisson \cup \text{Error} \cup \emptyset \times \text{Monnaie})$
+1. Signature : $\text{(Monnaie, Commande)} \Rightarrow (\text{Boisson} \cup \emptyset \times \text{Monnaie}) \cup \text{Exception}$
 2. Axiomes :
 
-	* $\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \ 
-	tel que $\forall$ type $\in$ Commande.stock, \ Commande.stock[type] $\neq$ Machine.Stock[type] \
-	$\forall \text{Monnaie} \in$ Coins \ tel que Monnaie.compute_surplus(Machine.MaxCashInput) $\neq$ Error \
-	et Monnaie.value > Commande.price \ order(Commande, Monnaie) $\Rightarrow$ Drink(command), change
+	* $\forall \text{commande} \in$ Drink, Drink l'ensemble de tous les drinks possibles \ 
+	tel que $\forall$ type $\in$ Commande.stock, \ commande.stock[type] $\leq$ Machine.Stock[type] \
+	$\forall \text{monnaie} \in$ Coins \ tel que monnaie.compute_surplus(Machine.MaxCashInput) $\neq$ Error \
+	et monnaie.value > commande.price \ order(commande, monnaie) $\Rightarrow$ Drink(commande), change
 	
-	* $\forall \text{Commande} \notin$ {Drink}, Ensemble de tous les drinks possibles\
+	* $\forall \text{commande} \notin$ Drink, Drink l'ensemble de tous les drinks possibles\
+	$\forall \text{monnaie} \in$ Coins \
+	order(commande, monnaie) $\Rightarrow$ InvalidOrderException
+
+    * $\forall \text{Commande} \in$ Drink, Drink l'ensemble de tous les drinks possibles \
 	$\forall \text{Monnaie} \in$ Coins \
-	order(Commande, Monnaie) $\Rightarrow$ None, Monnaie
-
-    * $\forall \text{Commande} \in$ {Drink}, Ensemble de tous les drinks possibles \
-	$\forall \text{Monnaie} \in$ Coins \ tel que Monnaie.compute_surplus(Machine.MaxCashInput) = Error \
-	order(Commande, Monnaie) $\Rightarrow$ None, Monnaie
-
+	tel que Monnaie.compute_surplus(Machine.MaxCashInput) = NoChangePossibleException \
+	order(commande, monnaie) $\Rightarrow$ None, monnaie
+	
+	* $\forall \text{commande} \in$ Drink, Drink l'ensemble de tous les drinks possibles \
+	tel que $\forall$ type $\in$ Commande.stock, \ commande.stock[type] $>$ Machine.Stock[type]
+	order(commande, monnaie) $\Rightarrow$ NotEnoughStockException
+	
 3. Complexité : Max($\forall$ functions $\in$ order: Complexité(functions)) = $O(2^n)$ \
 	complexité de Coins.compute_surplus, avec $n$ le nombre de pièces dans coins.
 	
@@ -56,7 +60,7 @@ reset :
 
 edit_prices :
 ---------------
-1. Signature : $\text{(dictionnaire\_prix)} \Rightarrow \emptyset \cup \text{Error}$
+1. Signature : $\text{(dictionnaire\_prix)} \Rightarrow \emptyset \cup \text{TypeError}$
 2. Axiomes :
 	* $\forall$ stock $\in$ \{'thé', 'café', 'lait', 'chocolat'\}, \
 		$\forall$ prix $\geq$ 0\
@@ -72,7 +76,7 @@ edit_prices :
 
 edit_stocks :
 ---------------
-1. Signature : $\text{(dictionnaire\_stocks)} \Rightarrow \emptyset \cup \text{Error}$
+1. Signature : $\text{(dictionnaire\_stocks)} \Rightarrow \emptyset$
 2. Axiomes :
 	* $\forall$ stock $\in$ \{'thé', 'café', 'lait', 'chocolat', 'sucre'\}, \
 		$\forall$ machine.quantite[stock] < quantite $\leq$  machine.quantite_max[stock] \
@@ -216,45 +220,72 @@ has_beverage
 4. Tests: *test_drink.py*
 	* test_drink_has_beverage
 	
-# Méthodes de Log #
+# Méthodes des Logs #
 
-Méthode Log général
+Log.message
 ----------
 
-1. Signature: 
-2. Axiomes:
+1. Signature: $\emptyset \Rightarrow \emptyset$
+2. Axiomes: $\forall$ log._message \
+	log.message = log._message
 3. Complexité : $O(1)$
 4. Tests: *test_logs.py*
+	* test_log
+	
+StockLog.message
+----------------
+1. Signature: $\emptyset \Rightarrow \emptyset$
+2. Axiomes: 
+	* $\forall$ $\text{(stock, quantity)}_n$ $\in$ prev_stock, \
+	$\forall$ $\text{(n\_stocks, n\_quantite)}_n$ $\in$ log.cur_stock
+	log.message $\Rightarrow$ \
+	$$\sum^{n}_{i=1}"\{ p\_stock_i\} : \{p\_quantite_i\} \rightarrow \{n\_quantité_i\} \{n\_quantité - p\_quantite\}"$$
+3. Complexité : $O(1)$
+4. Tests: *test_logs.py*
+	* test_stock_log_no_changes
+	* test_stock_log_message
+	* test_stock_log_str
 
-Méthode CoinsLog
+OrderLog.message
 ----------
 
-1. Signature: 
-2. Axiomes:
+1. Signature: $\emptyset \Rightarrow \emptyset$
+2. Axiomes: 
+	* $\forall$ commande $\in$ Drink, Drink l'ensemble des Drinks possible \
+	$\forall$ monnaie $\in$ Coins \
+	Orderlog.message $\Rightarrow$ "{commande} which cost {commande.price} \
+	the customer gave {monnaie.value}"
+	
 3. Complexité : $O(1)$
 4. Tests: *test_logs.py*
+	* test_cash_log_message
 
-Méthode OrderLog
+EndOrderLog.message
 ----------
 
-1. Signature: 
-2. Axiomes:
+1. Signature: $\emptyset \Rightarrow \emptyset$
+2. Axiomes: 
+	* EndOrderLog.message() $\Rightarrow$ "That's all folks"
 3. Complexité : $O(1)$
 4. Tests: *test_logs.py*
+	* test_end_order_log_message
+	
+CoinsLog
+---------------------------
+CoinsLog est un alias de StockLog avec un intitulé différent. \
+Test : *test_logs.py* \
+	* test_coins_log_message
 
-Méthode EndOrderLog
+CashLog.message
 ----------
 
-1. Signature: 
-2. Axiomes:
+1. Signature: $\emptyset \Rightarrow \emptyset$
+2. Axiomes: 
+	* $\forall$ $\text{monnaie}_i$ $\in$ Coins
+	CashLog.message $\Rightarrow$ \
+	"$\text{monnaie}_i \rightarrow \text{monnaie}_{i-1} (\text{monnaie}_i-\text{monnaie}_{i-1})$"
+	
 3. Complexité : $O(1)$
 4. Tests: *test_logs.py*
-
-Méthode CashLog
-----------
-
-1. Signature: 
-2. Axiomes:
-3. Complexité : $O(1)$
-4. Tests: *test_logs.py*
+	* test_cash_log_message
 
