@@ -1,7 +1,7 @@
 import copy
 from logs import StockLog, CoinsLog, OrderLog, CashLog, EndOrderLog
 from drink import Drink
-from coins import Coins
+from coins import Coins, NoChangePossibleException
 from machine_interfaces import MachineFunc, MachineMaintenance
 
 
@@ -19,8 +19,7 @@ class Machine(object):
     CoinsContainers = [50, 20, 10, 5]
     StocksType = ['coffee', 'tea', 'chocolate', 'milk', 'sugar']
     DefaultPrices = {'coffee': 20, 'tea': 10, 'chocolate': 30,
-                     'milk': 5, 'sugar': [0, 5, 15, 15]}  # On peut aussi faire
-                                                          # coffee: [0, 20]
+                     'milk': 5, 'sugar': [0, 5, 15, 15]}
 
     def __init__(self, max_stocks=None, max_coins=None, stock_prices=None):
         if not max_stocks:
@@ -172,7 +171,7 @@ class Machine(object):
                                    in zip(coins_in, Machine.CoinsType)})
         try:
             coins_out = coins.compute_surplus(Machine.MaxCashInput)
-        except Exception:  # Must be more explicit
+        except NoChangePossibleException:
             return None, copy.copy(coins)  # Abort if 2€ is impossible to get
         coins -= coins_out
         if not drink.has_beverage:

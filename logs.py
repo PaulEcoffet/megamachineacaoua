@@ -61,6 +61,9 @@ class OrderLog(Log):
 
 
 class EndOrderLog(Log):
+    """
+    Explicit the end of an order and the logs linked to it.
+    """
 
     def __init__(self):
         super().__init__()
@@ -72,7 +75,9 @@ class EndOrderLog(Log):
 
 
 class CashLog(Log):
-    """"""
+    """
+    Log the cash update.
+    """
 
     def __init__(self, previous, current):
         super().__init__()
