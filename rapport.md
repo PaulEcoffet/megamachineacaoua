@@ -142,6 +142,7 @@ add_to_cash :
 	* $\forall \text{coins} \in \text{Coins}$, \
 		machine.add_to_cash(coins) $\Rightarrow$ $\forall$ type, quantite $\in$ coins, \
 		machine.cash[type] = machine.cash[type] + quantite
+3. Complexité : $O(1)$
 
 # Fonctions de Coins #
 Coins hérite de collections.Counter.
@@ -272,8 +273,9 @@ EndOrderLog.message
 	
 CoinsLog
 ---------------------------
-CoinsLog est un alias de StockLog avec un intitulé différent. \
-Test : *test_logs.py* \
+CoinsLog est un alias de StockLog avec un intitulé différent.
+
+1. Test: *test_logs.py*
 	* test_coins_log_message
 
 CashLog.message
